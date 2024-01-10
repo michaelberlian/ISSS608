@@ -1,5 +1,8 @@
 ---
-title: "ISSS608"
+title: "ISSS608: Visual Analytics and Applications"
+author: "Michael Berlian"
 ---
 
-Welcome to **ISSS608 Visual Analytics and Applications**. Follow me through the course!
+Welcome to my **ISSS608 Visual Analytics and Applications** journey. Follow me through the course!
+
+navigate through the navbar on top!
