@@ -44,9 +44,9 @@
   {
     "objectID": "In-class_Ex/In-class_Ex1/In-class_Ex1.html",
     "href": "In-class_Ex/In-class_Ex1/In-class_Ex1.html",
-    "title": "In-class Exercise 1",
+    "title": "In-class Exercise 1: Now You See It!",
     "section": "",
-    "text": "Please wait a bit longer for the exciting content!"
+    "text": "In this in-class exercise, two R packages will be used. They are:\n\nTidyverse :\nHaven :\n\n\npacman::p_load(tidyverse, haven)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex1/Hands-on_Ex1.html#r-graphic-vs-ggplot",
@@ -187,5 +187,19 @@
     "title": "Hands-on Exercise 1: A Layered Grammar of Graphics: ggplot2 methods",
     "section": "Working with theme",
     "text": "Working with theme\nwe can choose theme to fit our needs.\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex1/In-class_Ex1.html#loading-r-packages",
+    "href": "In-class_Ex/In-class_Ex1/In-class_Ex1.html#loading-r-packages",
+    "title": "In-class Exercise 1: Now You See It!",
+    "section": "",
+    "text": "In this in-class exercise, two R packages will be used. They are:\n\nTidyverse :\nHaven :\n\n\npacman::p_load(tidyverse, haven)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex1/In-class_Ex1.html#importing-pisa-data",
+    "href": "In-class_Ex/In-class_Ex1/In-class_Ex1.html#importing-pisa-data",
+    "title": "In-class Exercise 1: Now You See It!",
+    "section": "Importing PISA data",
+    "text": "Importing PISA data\nThe code chunk below uses read_sas() of haven to import PISA data into R\n\nstu_qqq &lt;- read_sas('data/cy08msp_stu_qqq.sas7bdat')\n\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\n\nwrite_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')\n\n\nstu_qqq_SG &lt;- read_rds('data/stu_qqq_SG.rds')"
   }
 ]
