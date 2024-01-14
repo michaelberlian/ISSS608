@@ -1,0 +1,328 @@
+---
+title: "Hands-on Exercise 2: Beyond ggplot2 Fundamentals"
+date: "10 January 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+In this hands on exercise, several ggplot2 extensions will be tried to create more elegant and effective graphics.
+
+-   control the placement of texts on graph utilising [ggrepel](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html) package
+
+-   create professional publication quality figure utilising [ggthemes](https://ggplot2.tidyverse.org/reference/ggtheme.html) and [hrbrthemes](https://www.rdocumentation.org/packages/hrbrthemes/versions/0.1.0) package
+
+-   plot composite figure utilising ggplot2 and [patchwork](https://patchwork.data-imaginist.com) package
+
+## Getting started
+
+### Importing the required libraries
+
+there are 4 new libraries that are going to be utilised in this hands on. They are:
+
+1.  ggrepel: to repel overlapping text
+2.  ggthemes: to provide wider themes, geoms, and scales for ggplot2
+3.  hrbrthemes: to provide typography-centric themes and theme componens for ggplot2
+4.  patchwork: to combine figures
+
+```{r}
+pacman::p_load(ggrepel, patchwork, ggthemes, hrbrthemes, tidyverse)
+```
+
+### Importing the data
+
+the data that will be used in this hands-on is exam data
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+preview 5 row of the exam data
+
+```{r}
+head(exam_data,5)
+```
+
+## Beyond ggplot2 annotation: ggrepel
+
+First, we look on the plot without using the ggrepel
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              size=0.5) +  
+  geom_label(aes(label = ID), 
+             hjust = .5, 
+             vjust = -.5) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  ggtitle("English scores versus Maths scores for Primary 3")
+```
+
+## The code
+
+```{r}
+#| eval: false
+ggplot(data = exam_data,
+       aes(x = MATHS,
+                 y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              size = 0.5) +
+  geom_label(aes(label=ID),
+             hjust = .5,
+             vjust = -.5) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  ggtitle("English scores versus Maths scores")
+  
+```
+:::
+
+There are too much annotation that you cannot see anything anymore
+
+### working with ggrepel
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+ggplot(data=exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              size = 0.5) +
+  geom_label_repel(aes(label = ID),
+                   fontface = "bold") +
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100)) +
+  ggtitle("English scores versus Math schores for Primary 3")
+```
+
+## The code
+
+```{r}
+#| eval: false
+ggplot(data=exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              size = 0.5) +
+  geom_label_repel(aes(label = ID),
+                   fontface = "bold") +
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100)) +
+  ggtitle("English scores versus Math schores for Primary 3")
+```
+:::
+
+now the annotation are not overlapping and only shown when possible
+
+## Beyond ggplot2 themes
+
+there are some built in themes from ggplot such as `theme_gray(), theme_bw(), theme_minimal()` and some more.
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = "grey25",
+                 fill = "grey90") +
+  theme_gray() +
+  ggtitle("Distribution of Math scores")
+```
+
+### ggtheme
+
+ggtheme is part of ggplot. However, it is open for extension therefore there are more ggplot that created by communities, `theme_economist()` is one of the example of theme created by others
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = 'grey25',
+                 fill = 'grey90') +
+  ggtitle('Distribution of Math scores') +
+  theme_economist()
+```
+
+### hrbrthemes
+
+hrbrthemes are more focused on the typography instead of the overall beauty
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = 'grey25',
+                 fill = 'grey90') +
+  ggtitle('Distribution of Math scores') +
+  theme_ipsum()
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS)) +
+  geom_histogram(bins = 20,
+                 boundary = 100,
+                 color = 'grey25',
+                 fill = 'grey90') +
+  ggtitle('Distribution of Math scores') +
+  theme_ipsum(axis_title_size = 18,
+              base_size = 15,
+              grid = "Y")
+```
+
+## Beyond Single Graphs
+
+sometimes plotting a single graph give minimum information. therefore, it is common to plot more than 1 graphic at the same time. this is to increase the amount of information and understanding extracted from the plots.
+
+```{r}
+p1 <- ggplot(data = exam_data, 
+             aes(x = MATHS)) +
+  geom_histogram(bins = 20, 
+                 boundary = 100,
+                 color = "grey25", 
+                 fill = "grey90") + 
+  coord_cartesian(xlim = c(0,100)) +
+  ggtitle("Distribution of Math scores")
+
+p1
+```
+
+```{r}
+p2 <- ggplot(data = exam_data, 
+             aes(x = ENGLISH)) +
+  geom_histogram(bins = 20, 
+                 boundary = 100,
+                 color = "grey25", 
+                 fill = "grey90") +
+  coord_cartesian(xlim = c(0,100)) +
+  ggtitle("Distribution of English scores")
+
+p2
+```
+
+```{r}
+p3 <- ggplot(data = exam_data, 
+             aes(x = MATHS,
+                 y = ENGLISH)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              size = 0.5) +
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100)) +
+  ggtitle("English scores versus Math scores for Primary 3")
+
+p3
+```
+
+here are 3 graphs plotted one after another. this way of plotting makes it hard to compare between them
+
+### Creating Composite Graphics: patchwork methods
+
+patchwork is an extension of ggplot2
+
+-   \+ or \| is used to create new column layout
+
+-   () is used for subplots
+
+-   / is used for new row layout
+
+### 2 Plots
+
+::: panel-tabset
+## column
+
+```{r}
+p1 + p2
+```
+
+## row
+
+```{r}
+p1 / p2
+```
+:::
+
+### 3 Plots
+
+::: panel-tabset
+## column
+
+```{r}
+p1 + p2 + p3
+```
+
+## row
+
+```{r}
+p1 / p2 / p3
+```
+
+## combination
+
+use "\|" instead of "+" to use combination
+
+```{r}
+(p1/p2)|(p3)
+```
+:::
+
+### annotation(tag)
+
+```{r}
+((p1/p2)|p3) +
+  plot_annotation(tag_levels='I')
+```
+
+### plot inside of plot
+
+```{r}
+p3 + inset_element(p2, 
+                   left = 0.02, 
+                   bottom = 0.7, 
+                   right = 0.5, 
+                   top = 1)
+```
+
+### patchwork + ggtheme
+
+```{r}
+patchwork <- (p1 / p2) | p3
+patchwork & theme_economist()
+```
+
+## Reference
+
+-   [Patchwork R package goes nerd viral](https://www.littlemissdata.com/blog/patchwork)
+
+-   [ggrepel](https://ggrepel.slowkow.com/)
+
+-   [ggthemes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+
+-   [hrbrthemes](https://cinc.rud.is/web/packages/hrbrthemes/)
+
+-   [ggplot tips: Arranging plots](https://albert-rapp.de/post/2021-10-28-extend-plot-variety/)
+
+-   [ggplot2 Theme Elements Demonstration](https://henrywang.nl/ggplot2-theme-elements-demonstration/)
+
+-   [ggplot2 Theme Elements Reference Sheet](https://isabella-b.com/blog/ggplot2-theme-elements-reference/)

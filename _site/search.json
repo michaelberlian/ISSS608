@@ -102,7 +102,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex1/Hands-on_Ex1.html#geometric-objects-geom_boxplot",
     "title": "Hands-on Exercise 1: A Layered Grammar of Graphics: ggplot2 methods",
     "section": "Geometric Objects: geom_boxplot",
-    "text": "Geometric Objects: geom_boxplot\ncreating box plot to show the median, two hinges and two whiskers, and all \"outlying\" points individually.\n\nggplot(data=exam_data, \n       aes(y = MATHS,       \n           x= GENDER)) +    \n  geom_boxplot()            \n\n\n\n\nNotches are used in box plots to help visually assess whether the medians of distributions differ. If the notches do not overlap, this is evidence that the medians are different.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(notch=TRUE)"
+    "text": "Geometric Objects: geom_boxplot\ncreating box plot to show the median, two hinges and two whiskers, and all “outlying” points individually.\n\nggplot(data=exam_data, \n       aes(y = MATHS,       \n           x= GENDER)) +    \n  geom_boxplot()            \n\n\n\n\nNotches are used in box plots to help visually assess whether the medians of distributions differ. If the notches do not overlap, this is evidence that the medians are different.\n\nggplot(data=exam_data, \n       aes(y = MATHS, \n           x= GENDER)) +\n  geom_boxplot(notch=TRUE)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex1/Hands-on_Ex1.html#geometric-objects-geom_violin",
@@ -201,5 +201,75 @@
     "title": "In-class Exercise 1: Now You See It!",
     "section": "Importing PISA data",
     "text": "Importing PISA data\nThe code chunk below uses read_sas() of haven to import PISA data into R\n\nstu_qqq &lt;- read_sas('data/cy08msp_stu_qqq.sas7bdat')\n\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\n\nwrite_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')\n\n\nstu_qqq_SG &lt;- read_rds('data/stu_qqq_SG.rds')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "",
+    "text": "In this hands on exercise, several ggplot2 extensions will be tried to create more elegant and effective graphics.\n\ncontrol the placement of texts on graph utilising ggrepel package\ncreate professional publication quality figure utilising ggthemes and hrbrthemes package\nplot composite figure utilising ggplot2 and patchwork package"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#overview",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "",
+    "text": "In this hands on exercise, several ggplot2 extensions will be tried to create more elegant and effective graphics.\n\ncontrol the placement of texts on graph utilising ggrepel package\ncreate professional publication quality figure utilising ggthemes and hrbrthemes package\nplot composite figure utilising ggplot2 and patchwork package"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#getting-started",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "Getting started",
+    "text": "Getting started\n\nImporting the required libraries\nthere are 4 new libraries that are going to be utilised in this hands on. They are:\n\nggrepel: to repel overlapping text\nggthemes: to provide wider themes, geoms, and scales for ggplot2\nhrbrthemes: to provide typography-centric themes and theme componens for ggplot2\npatchwork: to combine figures\n\n\npacman::p_load(ggrepel, patchwork, ggthemes, hrbrthemes, tidyverse)\n\n\n\nImporting the data\nthe data that will be used in this hands-on is exam data\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\npreview 5 row of the exam data\n\nhead(exam_data,5)\n\n# A tibble: 5 × 7\n  ID         CLASS GENDER RACE    ENGLISH MATHS SCIENCE\n  &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 Student321 3I    Male   Malay        21     9      15\n2 Student305 3I    Female Malay        24    22      16\n3 Student289 3H    Male   Chinese      26    16      16\n4 Student227 3F    Male   Chinese      27    77      31\n5 Student318 3I    Male   Malay        27    11      25"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-ggplot2-annotation-ggrepel",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-ggplot2-annotation-ggrepel",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "Beyond ggplot2 annotation: ggrepel",
+    "text": "Beyond ggplot2 annotation: ggrepel\nFirst, we look on the plot without using the ggrepel\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS,\n                 y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(method = lm,\n              size = 0.5) +\n  geom_label(aes(label=ID),\n             hjust = .5,\n             vjust = -.5) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores\")\n\n\n\n\nThere are too much annotation that you cannot see anything anymore\n\nworking with ggrepel\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data,\n       aes(x = MATHS,\n           y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(method = lm,\n              size = 0.5) +\n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\") +\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100)) +\n  ggtitle(\"English scores versus Math schores for Primary 3\")\n\n\n\n\nnow the annotation are not overlapping and only shown when possible"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-ggplot2-themes",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-ggplot2-themes",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "Beyond ggplot2 themes",
+    "text": "Beyond ggplot2 themes\nthere are some built in themes from ggplot such as theme_gray(), theme_bw(), theme_minimal() and some more.\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = \"grey25\",\n                 fill = \"grey90\") +\n  theme_gray() +\n  ggtitle(\"Distribution of Math scores\")\n\n\n\n\n\nggtheme\nggtheme is part of ggplot. However, it is open for extension therefore there are more ggplot that created by communities, theme_economist() is one of the example of theme created by others\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = 'grey25',\n                 fill = 'grey90') +\n  ggtitle('Distribution of Math scores') +\n  theme_economist()\n\n\n\n\n\n\nhrbrthemes\nhrbrthemes are more focused on the typography instead of the overall beauty\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = 'grey25',\n                 fill = 'grey90') +\n  ggtitle('Distribution of Math scores') +\n  theme_ipsum()\n\n\n\n\n\nggplot(data = exam_data,\n       aes(x = MATHS)) +\n  geom_histogram(bins = 20,\n                 boundary = 100,\n                 color = 'grey25',\n                 fill = 'grey90') +\n  ggtitle('Distribution of Math scores') +\n  theme_ipsum(axis_title_size = 18,\n              base_size = 15,\n              grid = \"Y\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-single-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#beyond-single-graphs",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "Beyond Single Graphs",
+    "text": "Beyond Single Graphs\nsometimes plotting a single graph give minimum information. therefore, it is common to plot more than 1 graphic at the same time. this is to increase the amount of information and understanding extracted from the plots.\n\np1 &lt;- ggplot(data = exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins = 20, \n                 boundary = 100,\n                 color = \"grey25\", \n                 fill = \"grey90\") + \n  coord_cartesian(xlim = c(0,100)) +\n  ggtitle(\"Distribution of Math scores\")\n\np1\n\n\n\n\n\np2 &lt;- ggplot(data = exam_data, \n             aes(x = ENGLISH)) +\n  geom_histogram(bins = 20, \n                 boundary = 100,\n                 color = \"grey25\", \n                 fill = \"grey90\") +\n  coord_cartesian(xlim = c(0,100)) +\n  ggtitle(\"Distribution of English scores\")\n\np2\n\n\n\n\n\np3 &lt;- ggplot(data = exam_data, \n             aes(x = MATHS,\n                 y = ENGLISH)) +\n  geom_point() +\n  geom_smooth(method = lm,\n              size = 0.5) +\n  coord_cartesian(xlim = c(0,100),\n                  ylim = c(0,100)) +\n  ggtitle(\"English scores versus Math scores for Primary 3\")\n\np3\n\n\n\n\nhere are 3 graphs plotted one after another. this way of plotting makes it hard to compare between them\n\nCreating Composite Graphics: patchwork methods\npatchwork is an extension of ggplot2\n\n+ or | is used to create new column layout\n() is used for subplots\n/ is used for new row layout\n\n\n\n2 Plots\n\ncolumnrow\n\n\n\np1 + p2\n\n\n\n\n\n\n\np1 / p2\n\n\n\n\n\n\n\n\n\n3 Plots\n\ncolumnrowcombination\n\n\n\np1 + p2 + p3\n\n\n\n\n\n\n\np1 / p2 / p3\n\n\n\n\n\n\nuse “|” instead of “+” to use combination\n\n(p1/p2)|(p3)\n\n\n\n\n\n\n\n\n\nannotation(tag)\n\n((p1/p2)|p3) +\n  plot_annotation(tag_levels='I')\n\n\n\n\n\n\nplot inside of plot\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n\n\n\n\n\npatchwork + ggtheme\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#column-1",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#column-1",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "column",
+    "text": "column\n\np1 + p2 + p3"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#row-1",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#row-1",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "row",
+    "text": "row\n\np1 / p2 / p3"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#combination",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#combination",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "combination",
+    "text": "combination\nuse “|” instead of “+” to use combination\n\n(p1/p2)|(p3)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#reference",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#reference",
+    "title": "Hands-on Exercise 2: Beyond ggplot2 Fundamentals",
+    "section": "Reference",
+    "text": "Reference\n\nPatchwork R package goes nerd viral\nggrepel\nggthemes\nhrbrthemes\nggplot tips: Arranging plots\nggplot2 Theme Elements Demonstration\nggplot2 Theme Elements Reference Sheet"
   }
 ]

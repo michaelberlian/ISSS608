@@ -202,7 +202,7 @@ ggplot(data=exam_data,
 
 ## Geometric Objects: geom_boxplot
 
-creating box plot to show the median, two hinges and two whiskers, and all \"outlying\" points individually.
+creating box plot to show the median, two hinges and two whiskers, and all "outlying" points individually.
 
 ```{r}
 ggplot(data=exam_data, 
