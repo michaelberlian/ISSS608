@@ -1,7 +1,97 @@
 ---
 title: "Take-Home Exercise 1"
-date: "10 January 2024"
+date: "14 January 2024"
 date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
 ---
 
-Not there yet :)
+## Prologue
+
+In this Take home Exercise we are going to explore the data from [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/) released on 5 December 2022. The dataset is the result of questionnaire filled by the students.
+
+## Getting Started
+
+### Importing packages and dataset
+
+In this take home exercise we are going to utilise several package
+
+1.  tidyverse
+2.  haven
+3.  ggrepel
+4.  patchwork
+5.  ggthemes
+6.  hrbrthemes
+
+```{r}
+pacman::p_load(tidyverse, haven, ggrepel, patchwork, ggthemes, hrbrthemes)
+```
+
+Importing the data in sas data type
+
+```{r}
+#| eval: false
+stu_qqq <- read_sas('data/cy08msp_stu_qqq.sas7bdat')
+```
+
+filtering the data to singapore
+
+```{r}
+#| eval: false
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT == "SGP")
+```
+
+export the filtered dataset to rds to ease further data importing
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')
+```
+
+read the exported rds
+
+```{r}
+stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
+```
+
+```{r}
+str(stu_qqq_SG)
+```
+
+## Data Preparation and Wrangling
+
+selecting columns
+
+```{r}
+stu_qqq <- stu_qqq_SG %>%
+  select(ST001D01T,CNTSCHID,ST004D01T) %>%
+  rename(c(school_ID = "CNTSCHID", grade = "ST001D01T", gender = "ST004D01T"))
+
+stu_qqq$school_ID <- as.factor(stu_qqq$school_ID)
+stu_qqq$grade <- as.factor(stu_qqq$grade)
+stu_qqq$gender <- as.factor(stu_qqq$gender)
+```
+
+```{r}
+glimpse(stu_qqq)
+```
+
+```{r}
+ggplot(data = stu_qqq,
+       aes(x = grade)) +
+  geom_bar() +
+  facet_wrap(~ gender) +
+  theme_minimal()
+```
+
+```{r}
+ggplot(data = stu_qqq,
+       aes(x = grade)) +
+  geom_bar() +
+  facet_wrap(~ school_ID) +
+  theme_minimal()
+```

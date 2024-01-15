@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-01-10">
+<meta name="dcterms.date" content="2024-01-14">
 
 <title>ISSS608 - Take-Home Exercise 1</title>
 <style>
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -90,6 +124,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex1/Hands-on_Ex1.html" rel="" target="">
  <span class="dropdown-text">Hands-on Exercise 1</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -140,7 +178,18 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#prologue" id="toc-prologue" class="nav-link active" data-scroll-target="#prologue">Prologue</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#importing-packages-and-dataset" id="toc-importing-packages-and-dataset" class="nav-link" data-scroll-target="#importing-packages-and-dataset">Importing packages and dataset</a></li>
+  </ul></li>
+  <li><a href="#data-preparation-and-wrangling" id="toc-data-preparation-and-wrangling" class="nav-link" data-scroll-target="#data-preparation-and-wrangling">Data Preparation and Wrangling</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -158,14 +207,14 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 10, 2024</p>
+      <p class="date">January 14, 2024</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 10, 2024</p>
+      <p class="date-modified">January 15, 2024</p>
     </div>
   </div>
     
@@ -174,9 +223,295 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Not there yet :)</p>
+<section id="prologue" class="level2">
+<h2 class="anchored" data-anchor-id="prologue">Prologue</h2>
+<p>In this Take home Exercise we are going to explore the data from <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 database</a> released on 5 December 2022. The dataset is the result of questionnaire filled by the students.</p>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<section id="importing-packages-and-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="importing-packages-and-dataset">Importing packages and dataset</h3>
+<p>In this take home exercise we are going to utilise several package</p>
+<ol type="1">
+<li>tidyverse</li>
+<li>haven</li>
+<li>ggrepel</li>
+<li>patchwork</li>
+<li>ggthemes</li>
+<li>hrbrthemes</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, haven, ggrepel, patchwork, ggthemes, hrbrthemes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Importing the data in sas data type</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stu_qqq <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="st">'data/cy08msp_stu_qqq.sas7bdat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>filtering the data to singapore</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> stu_qqq <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CNT <span class="sc">==</span> <span class="st">"SGP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>export the filtered dataset to rds to ease further data importing</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(stu_qqq_SG, <span class="st">'data/stu_qqq_SG.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>read the exported rds</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">'data/stu_qqq_SG.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stu_qqq_SG)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [6,606 × 1,279] (S3: tbl_df/tbl/data.frame)
+ $ CNT         : chr [1:6606] "SGP" "SGP" "SGP" "SGP" ...
+  ..- attr(*, "label")= chr "Country code 3-character"
+ $ CNTRYID     : num [1:6606] 702 702 702 702 702 702 702 702 702 702 ...
+  ..- attr(*, "label")= chr "Country Identifier"
+ $ CNTSCHID    : num [1:6606] 70200052 70200134 70200112 70200004 70200152 ...
+  ..- attr(*, "label")= chr "Intl. School ID"
+ $ CNTSTUID    : num [1:6606] 70200001 70200002 70200003 70200004 70200005 ...
+  ..- attr(*, "label")= chr "Intl. Student ID"
+ $ CYC         : chr [1:6606] "08MS" "08MS" "08MS" "08MS" ...
+  ..- attr(*, "label")= chr "PISA Assessment Cycle (2 digits + 2 character Assessment type - MS/FT)"
+ $ NatCen      : chr [1:6606] "070200" "070200" "070200" "070200" ...
+  ..- attr(*, "label")= chr "National Centre 6-digit Code"
+ $ STRATUM     : chr [1:6606] "SGP01" "SGP01" "SGP01" "SGP01" ...
+  ..- attr(*, "label")= chr "Stratum ID 5-character (cnt + original stratum ID)"
+ $ SUBNATIO    : chr [1:6606] "7020000" "7020000" "7020000" "7020000" ...
+  ..- attr(*, "label")= chr "Adjudicated sub-region code 7-digit code (3-digit country code + region ID + stratum ID)"
+ $ REGION      : num [1:6606] 70200 70200 70200 70200 70200 70200 70200 70200 70200 70200 ...
+  ..- attr(*, "label")= chr "REGION"
+ $ OECD        : num [1:6606] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "OECD country"
+ $ ADMINMODE   : num [1:6606] 2 2 2 2 2 2 2 2 2 2 ...
+  ..- attr(*, "label")= chr "Mode of Respondent"
+ $ LANGTEST_QQQ: num [1:6606] 313 313 313 313 313 313 313 313 313 313 ...
+  ..- attr(*, "label")= chr "Language of Questionnaire"
+ $ LANGTEST_COG: num [1:6606] 313 313 313 313 313 313 313 313 313 313 ...
+  ..- attr(*, "label")= chr "Language of Assessment"
+ $ LANGTEST_PAQ: num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Language of Parent Questionnaire"
+ $ Option_CT   : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Creative Thinking Option"
+ $ Option_FL   : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Financial Literacy Option"
+ $ Option_ICTQ : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "ICT Questionnaire Option"
+ $ Option_WBQ  : num [1:6606] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Well-Being Questionnaire Option"
+ $ Option_PQ   : num [1:6606] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Parent Questionnaire Option"
+ $ Option_TQ   : num [1:6606] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Teacher Questionnaire Option"
+ $ Option_UH   : num [1:6606] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Une Heure Option"
+ $ BOOKID      : num [1:6606] 4 45 8 40 42 15 13 39 14 7 ...
+  ..- attr(*, "label")= chr "Form Identifier"
+ $ ST001D01T   : num [1:6606] 10 10 10 10 10 10 10 10 10 10 ...
+  ..- attr(*, "label")= chr "Student International Grade (Derived)"
+ $ ST003D02T   : num [1:6606] 10 6 7 2 9 9 3 4 8 6 ...
+  ..- attr(*, "label")= chr "Student (Standardized) Birth - Month"
+ $ ST003D03T   : num [1:6606] 2006 2006 2006 2006 2006 ...
+  ..- attr(*, "label")= chr "Student (Standardized) Birth -Year"
+ $ ST004D01T   : num [1:6606] 1 2 2 2 1 1 2 2 1 2 ...
+  ..- attr(*, "label")= chr "Student (Standardized) Gender"
+ $ ST250Q01JA  : num [1:6606] 2 1 1 2 2 2 1 1 2 2 ...
+  ..- attr(*, "label")= chr "Which of the following are in your [home]: A room of your own"
+ $ ST250Q02JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Which of the following are in your [home]: A computer (laptop, desktop, or tablet) that you can use for school work"
+ $ ST250Q03JA  : num [1:6606] 1 1 2 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Which of the following are in your [home]: Educational Software or Apps"
+ $ ST250Q04JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Which of the following are in your [home]: Your own [cell phone] with Internet access (e.g. smartphone)"
+ $ ST250Q05JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Which of the following are in your [home]: Internet access (e.g. Wi-fi) (excluding through smartphones)"
+ $ ST250D06JA  : chr [1:6606] "7020002" "7020001" "7020001" "7020002" ...
+  ..- attr(*, "label")= chr "Which of the following are in your home? &lt;Country-specific item 1&gt;"
+ $ ST250D07JA  : chr [1:6606] "7020002" "7020001" "7020002" "7020002" ...
+  ..- attr(*, "label")= chr "Which of the following are in your home? &lt;Country-specific item 2&gt;"
+ $ ST251Q01JA  : num [1:6606] 2 1 2 1 2 2 2 1 3 3 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Cars, vans, or trucks"
+ $ ST251Q02JA  : num [1:6606] 1 4 1 2 2 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Mopeds or motorcycles"
+ $ ST251Q03JA  : num [1:6606] 3 3 3 3 2 2 3 3 4 3 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Rooms with a bath or shower"
+ $ ST251Q04JA  : num [1:6606] 3 3 3 3 2 3 3 3 4 3 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Rooms with a [flush toilet]"
+ $ ST251Q06JA  : num [1:6606] 3 4 2 2 1 2 2 3 4 1 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Musical instruments (e.g. guitar, piano, [country-specific example])"
+ $ ST251Q07JA  : num [1:6606] 3 2 1 1 4 1 4 1 4 3 ...
+  ..- attr(*, "label")= chr "How many of these items are there at your [home]: Works of art (e.g. paintings, sculptures, [country-specific example])"
+ $ ST251D08JA  : chr [1:6606] "9999997" "9999997" "9999997" "9999997" ...
+  ..- attr(*, "label")= chr "How many of these items are there at your home? &lt;Country-specific item 1&gt;"
+ $ ST251D09JA  : chr [1:6606] "9999997" "9999997" "9999997" "9999997" ...
+  ..- attr(*, "label")= chr "How many of these items are there at your home? &lt;Country-specific item 2&gt;"
+ $ ST253Q01JA  : num [1:6606] 7 8 7 6 7 7 8 8 8 7 ...
+  ..- attr(*, "label")= chr "How many [digital devices] with screens are there in your [home]?"
+ $ ST254Q01JA  : num [1:6606] 2 3 2 2 2 2 2 2 2 2 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: Televisions"
+ $ ST254Q02JA  : num [1:6606] 1 2 2 1 3 2 2 5 2 2 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: Desktop computers"
+ $ ST254Q03JA  : num [1:6606] 3 2 2 2 2 2 3 3 3 4 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: Laptop computers or notebooks"
+ $ ST254Q04JA  : num [1:6606] 2 3 2 1 1 2 2 3 3 2 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: Tablets (e.g. [iPad®], [BlackBerry® Playbook™])"
+ $ ST254Q05JA  : num [1:6606] 1 5 1 1 NA 1 1 5 2 2 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: E-book readers (e.g. [Kindle™], [Kobo], [Bookeen])"
+ $ ST254Q06JA  : num [1:6606] 3 2 3 3 4 2 4 3 4 4 ...
+  ..- attr(*, "label")= chr "How many of the following [digital devices] are in your [home]: [Cell phones] with Internet access (i.e. smartphones)"
+ $ ST255Q01JA  : num [1:6606] 7 4 4 3 2 2 4 5 7 4 ...
+  ..- attr(*, "label")= chr "How many books are there in your [home]?"
+ $ ST256Q01JA  : num [1:6606] 2 4 5 2 4 1 1 3 4 4 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Religious books (e.g. [Bible], [Example 2])"
+ $ ST256Q02JA  : num [1:6606] 2 5 2 1 1 2 1 5 4 2 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Classical literature (e.g. [Shakespeare], [Example 2])"
+ $ ST256Q03JA  : num [1:6606] 4 5 2 1 1 2 2 5 5 1 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Contemporary literature"
+ $ ST256Q06JA  : num [1:6606] 4 3 3 2 2 5 2 4 4 1 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Books on science"
+ $ ST256Q07JA  : num [1:6606] 3 5 5 2 2 5 1 4 3 1 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Books on art, music, or design"
+ $ ST256Q08JA  : num [1:6606] 3 3 3 1 1 5 1 5 5 2 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: [Technical reference books]"
+ $ ST256Q09JA  : num [1:6606] 2 2 4 2 2 2 2 2 2 3 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Dictionaries"
+ $ ST256Q10JA  : num [1:6606] 4 4 5 2 4 1 4 4 4 3 ...
+  ..- attr(*, "label")= chr "How many of these books at [home]: Books to help with your school work"
+ $ ST230Q01JA  : num [1:6606] 4 4 2 4 4 3 2 2 3 4 ...
+  ..- attr(*, "label")= chr "How many siblings (including brothers, sisters, step-brothers, and step-sisters) do you have?"
+ $ ST005Q01JA  : num [1:6606] 2 2 2 2 2 2 2 2 2 2 ...
+  ..- attr(*, "label")= chr "What is the [highest level of schooling] completed by your mother?"
+ $ ST006Q01JA  : num [1:6606] 2 2 2 2 2 2 2 NA 2 2 ...
+  ..- attr(*, "label")= chr "Does your mother have any of the following qualifications: [ISCED level 8]"
+ $ ST006Q02JA  : num [1:6606] 2 2 2 2 2 2 2 1 2 2 ...
+  ..- attr(*, "label")= chr "Does your mother have any of the following qualifications: [ISCED level 7]"
+ $ ST006Q03JA  : num [1:6606] 1 2 2 2 2 2 2 1 1 1 ...
+  ..- attr(*, "label")= chr "Does your mother have any of the following qualifications: [ISCED level 6]"
+ $ ST006Q04JA  : num [1:6606] 2 1 2 2 1 1 2 1 1 2 ...
+  ..- attr(*, "label")= chr "Does your mother have any of the following qualifications: [ISCED level 5]"
+ $ ST006Q05JA  : num [1:6606] 1 1 2 1 2 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Does your mother have any of the following qualifications: [ISCED level 4]"
+ $ ST007Q01JA  : num [1:6606] 2 2 2 4 2 2 4 2 2 2 ...
+  ..- attr(*, "label")= chr "What is the [highest level of schooling] completed by your father?"
+ $ ST008Q01JA  : num [1:6606] 2 2 2 NA 2 2 2 NA 2 2 ...
+  ..- attr(*, "label")= chr "Does your father have any of the following qualifications: [ISCED level 8]"
+ $ ST008Q02JA  : num [1:6606] 2 2 2 NA 2 1 2 NA 2 2 ...
+  ..- attr(*, "label")= chr "Does your father have any of the following qualifications: [ISCED level 7]"
+ $ ST008Q03JA  : num [1:6606] 2 2 2 NA 2 1 2 1 1 2 ...
+  ..- attr(*, "label")= chr "Does your father have any of the following qualifications: [ISCED level 6]"
+ $ ST008Q04JA  : num [1:6606] 1 1 2 NA 1 1 2 1 1 1 ...
+  ..- attr(*, "label")= chr "Does your father have any of the following qualifications: [ISCED level 5]"
+ $ ST008Q05JA  : num [1:6606] 2 1 2 1 2 1 2 1 1 2 ...
+  ..- attr(*, "label")= chr "Does your father have any of the following qualifications: [ISCED level 4]"
+ $ ST258Q01JA  : num [1:6606] 1 1 1 5 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "In the past 30 days, how often did you not eat because there was not enough money to buy food?"
+ $ ST259Q01JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Now think about where you would place your family on this scale. Where would you say your family stands at this time?"
+ $ ST259Q02JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Now think about where you would place your family on this scale. Where do you think you will stand when you are 30?"
+ $ ST019AQ01T  : num [1:6606] 1 1 1 1 1 2 1 2 1 1 ...
+  ..- attr(*, "label")= chr "In what country were you and your parents born? You"
+ $ ST019BQ01T  : num [1:6606] 1 1 2 1 1 2 1 2 1 1 ...
+  ..- attr(*, "label")= chr "In what country were you and your parents born? Mother"
+ $ ST019CQ01T  : num [1:6606] 1 1 1 1 1 2 1 2 1 1 ...
+  ..- attr(*, "label")= chr "In what country were you and your parents born? Father"
+ $ ST021Q01TA  : num [1:6606] NA NA NA NA NA 1 NA 1 NA NA ...
+  ..- attr(*, "label")= chr "How old were you when you arrived in [country of test]?"
+ $ ST022Q01TA  : num [1:6606] 1 1 2 2 1 2 1 2 1 2 ...
+  ..- attr(*, "label")= chr "What language do you speak at home most of the time?"
+ $ ST226Q01JA  : num [1:6606] 1 1 1 1 1 1 1 4 1 1 ...
+  ..- attr(*, "label")= chr "How long have you been enrolled at this school?"
+ $ ST125Q01NA  : num [1:6606] 3 5 8 4 8 3 4 8 8 4 ...
+  ..- attr(*, "label")= chr "How old were you when you started [ISCED 0]: Years"
+ $ ST126Q01TA  : num [1:6606] 4 5 5 5 5 5 5 5 4 5 ...
+  ..- attr(*, "label")= chr "How old were you when you started [ISCED 1]: Years"
+ $ ST127Q01TA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever repeated a [grade]: At [ISCED 1]"
+ $ ST127Q02TA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever repeated a [grade]: At [ISCED 2]"
+ $ ST127Q03TA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever repeated a [grade]: At [ISCED 3]"
+ $ ST260Q01JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever missed school for more than three months in a row: At [ISCED 1]"
+ $ ST260Q02JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever missed school for more than three months in a row: At [ISCED 2]"
+ $ ST260Q03JA  : num [1:6606] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Have you ever missed school for more than three months in a row: At [ISCED 3]"
+ $ ST261Q01JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I was bored."
+ $ ST261Q02JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I was suspended for something (e.g. violence, aggression, use of drugs, drug dealing)."
+ $ ST261Q03JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I was pregnant."
+ $ ST261Q04JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I could not reach school because of transportation problems."
+ $ ST261Q05JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I had to take care of a family member."
+ $ ST261Q06JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I had to help with work at home, the family business, or on the family land."
+ $ ST261Q07JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I had to get work to bring money home."
+ $ ST261Q08JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I was sick."
+ $ ST261Q09JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I did not feel safe at school."
+ $ ST261Q10JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: I could not pay [school fees]."
+ $ ST261Q11JA  : num [1:6606] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Why miss school for 3+ months: School was closed because of a natural disaster (e.g. flood, earthquake)."
+ $ ST062Q01TA  : num [1:6606] 1 1 1 1 2 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "In the last two full weeks of school, how often: I [skipped] a whole school day"
+  [list output truncated]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-preparation-and-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation-and-wrangling">Data Preparation and Wrangling</h2>
+<p>selecting columns</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stu_qqq <span class="ot">&lt;-</span> stu_qqq_SG <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ST001D01T,CNTSCHID,ST004D01T) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="fu">c</span>(<span class="at">school_ID =</span> <span class="st">"CNTSCHID"</span>, <span class="at">grade =</span> <span class="st">"ST001D01T"</span>, <span class="at">gender =</span> <span class="st">"ST004D01T"</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>stu_qqq<span class="sc">$</span>school_ID <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(stu_qqq<span class="sc">$</span>school_ID)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>stu_qqq<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(stu_qqq<span class="sc">$</span>grade)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>stu_qqq<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(stu_qqq<span class="sc">$</span>gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(stu_qqq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 6,606
+Columns: 3
+$ grade     &lt;fct&gt; 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, …
+$ school_ID &lt;fct&gt; 70200052, 70200134, 70200112, 70200004, 70200152, 70200043, …
+$ gender    &lt;fct&gt; 1, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 2, 1, 1, …</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> grade)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> grade)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> school_ID) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
