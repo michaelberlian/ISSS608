@@ -15,7 +15,7 @@ In this Take home Exercise we are going to explore the data from [PISA 2022 data
 
 ## Getting Started
 
-### Importing packages and dataset
+### Importing packages
 
 In this take home exercise we are going to utilise several package
 
@@ -29,6 +29,8 @@ In this take home exercise we are going to utilise several package
 ```{r}
 pacman::p_load(tidyverse, haven, ggrepel, patchwork, ggthemes, hrbrthemes)
 ```
+
+### Importing dataset
 
 Importing the data in sas data type
 
@@ -58,21 +60,23 @@ read the exported rds
 stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
 ```
 
-```{r}
-str(stu_qqq_SG)
-```
-
 ## Data Preparation and Wrangling
+
+### Data Preparation
 
 selecting columns
 
 ```{r}
 stu_qqq <- stu_qqq_SG %>%
-  select(ST001D01T,CNTSCHID,ST004D01T) %>%
-  rename(c(school_ID = "CNTSCHID", grade = "ST001D01T", gender = "ST004D01T"))
+  select(CNTSCHID,ST004D01T,PV1MATH,PV1SCIE,PV1READ) %>%
+  rename(c(school_ID = "CNTSCHID", 
+           gender = "ST004D01T",
+           math = "PV1MATH",
+           science = "PV1SCIE",
+           read = "PV1READ")) %>%
+  mutate(gender = recode(gender, "1" = "Female", "2" = "Male"))
 
 stu_qqq$school_ID <- as.factor(stu_qqq$school_ID)
-stu_qqq$grade <- as.factor(stu_qqq$grade)
 stu_qqq$gender <- as.factor(stu_qqq$gender)
 ```
 
@@ -80,18 +84,203 @@ stu_qqq$gender <- as.factor(stu_qqq$gender)
 glimpse(stu_qqq)
 ```
 
+## Exploratory Data Analysis (EDA)
+
+### 1. Gender
+
+::: panel-tabset
+#### Math
+
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+stats <- data.frame(gender = as.factor(c('Female','Male')),
+                    mean = c(mean(stu_qqq$math[stu_qqq$gender == "Female"]),
+                             mean(stu_qqq$math[stu_qqq$gender == "Male"])),
+                    median = c(median(stu_qqq$math[stu_qqq$gender == "Female"]),
+                               median(stu_qqq$math[stu_qqq$gender == "Male"])) )
+
 ggplot(data = stu_qqq,
-       aes(x = grade)) +
-  geom_bar() +
+       aes(y = math)) +
+  geom_histogram(bins = 10,
+                 color = 'grey50',
+                 fill = 'grey90') +
   facet_wrap(~ gender) +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=mean),
+             color = "red") +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=median),
+             color = "blue") +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 2.1,
+    label = paste("MEAN"),
+    color = "red"
+  ) +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 1,
+    label = paste("MEDIAN"),
+    color = "blue"
+  ) +
   theme_minimal()
 ```
 
+#### Science
+
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+stats <- data.frame(gender = as.factor(c('Female','Male')),
+                    mean = c(mean(stu_qqq$science[stu_qqq$gender == "Female"]),
+                             mean(stu_qqq$science[stu_qqq$gender == "Male"])),
+                    median = c(median(stu_qqq$science[stu_qqq$gender == "Female"]),
+                               median(stu_qqq$science[stu_qqq$gender == "Male"])) )
+
 ggplot(data = stu_qqq,
-       aes(x = grade)) +
-  geom_bar() +
-  facet_wrap(~ school_ID) +
+       aes(y = science)) +
+  geom_histogram(bins = 10,
+                 color = 'grey50',
+                 fill = 'grey90') +
+  facet_wrap(~ gender) +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=mean),
+             color = "red") +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=median),
+             color = "blue") +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 2.1,
+    label = paste("MEAN"),
+    color = "red"
+  ) +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 1,
+    label = paste("MEDIAN"),
+    color = "blue"
+  ) +
   theme_minimal()
+```
+
+#### Reading
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+stats <- data.frame(gender = as.factor(c('Female','Male')),
+                    mean = c(mean(stu_qqq$read[stu_qqq$gender == "Female"]),
+                             mean(stu_qqq$read[stu_qqq$gender == "Male"])),
+                    median = c(median(stu_qqq$read[stu_qqq$gender == "Female"]),
+                               median(stu_qqq$read[stu_qqq$gender == "Male"])) )
+
+ggplot(data = stu_qqq,
+       aes(y = read)) +
+  geom_histogram(bins = 10,
+                 color = 'grey50',
+                 fill = 'grey90') +
+  facet_wrap(~ gender) +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=mean),
+             color = "red") +
+  geom_hline(data = stats,
+             mapping = aes(yintercept=median),
+             color = "blue") +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 2.1,
+    label = paste("MEAN"),
+    color = "red"
+  ) +
+  annotate(
+    'text',
+    x = Inf,
+    y = Inf,
+    hjust = 1,
+    vjust = 1,
+    label = paste("MEDIAN"),
+    color = "blue"
+  ) +
+  theme_minimal()
+```
+:::
+
+### 2. School
+
+```{r}
+average_math_SG <- mean(stu_qqq$math)
+average_scie_SG <- mean(stu_qqq$science)
+average_read_SG <- mean(stu_qqq$read)
+
+stu_qqq_sch <- stu_qqq %>%
+  group_by(school_ID) %>%
+  mutate(average_math_diff = abs(mean(math)-average_math_SG),
+         average_science_diff = abs(mean(science)-average_scie_SG),
+         average_read_diff = abs(mean(read)-average_read_SG)) %>%
+  select(school_ID, average_math_diff, average_science_diff, average_read_diff) %>%
+  unique() 
+
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+p1 <- ggplot(data = stu_qqq_sch,
+       aes(y = average_math_diff)) +
+  geom_boxplot(width = 0.1) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y ="mean",         
+               colour ="red", 
+               size=1) +
+  xlim(c(-0.5,0.5)) +
+  ylim(c(0,220)) +
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+
+p2 <- ggplot(data = stu_qqq_sch,
+       aes(y = average_science_diff)) +
+  geom_boxplot(width = 0.1) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y ="mean",         
+               colour ="red", 
+               size=1) +
+  xlim(c(-0.5,0.5)) +
+  ylim(c(0,220)) +
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+
+p3 <- ggplot(data = stu_qqq_sch,
+       aes(y = average_read_diff)) +
+  geom_boxplot(width = 0.1) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y ="mean",         
+               colour ="red", 
+               size=1) +
+  xlim(c(-0.5,0.5)) +
+  ylim(c(0,220)) +
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+
+p1|p2|p3
 ```
