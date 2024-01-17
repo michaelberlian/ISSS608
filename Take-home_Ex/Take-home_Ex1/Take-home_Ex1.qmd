@@ -148,7 +148,7 @@ from the distribution graph above can be seen that the questionnaire have simila
 ::: panel-tabset
 #### Math
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores with male have a **SLIGHTLY HIGHER** average and median score
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -194,7 +194,7 @@ ggplot(data = stu_qqq,
 
 #### Science
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores with male have a **SLIGHTLY HIGHER** average and median score
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -240,7 +240,7 @@ ggplot(data = stu_qqq,
 
 #### Reading
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores with male have a **SLIGHTLY LOWER** average and median score
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores, with male have a **SLIGHTLY LOWER** average and median score
 
 ```{r}
 #| code-fold: true
