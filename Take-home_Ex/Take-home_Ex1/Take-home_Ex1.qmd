@@ -62,7 +62,15 @@ stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
 
 ## Data Preparation
 
-### Selecting columns
+### Variable preparations
+
+-   filtering the columns that will be used for further analysis
+
+-   rename the columns to a more understandable names
+
+-   recode the answers of questions to a more descriptive measures
+
+-   change the columns data type
 
 ```{r}
 stu_qqq <- stu_qqq_SG %>%
@@ -74,7 +82,7 @@ stu_qqq <- stu_qqq_SG %>%
            read = "PV1READ",
            num_book = "ST255Q01JA",
            num_transport = "ST251Q01JA",
-           num_digital_devices = ST253Q01JA)) %>%
+           num_digital_devices = "ST253Q01JA")) %>%
   mutate(gender = recode(gender, 
                          "1" = "Female", 
                          "2" = "Male")) %>%
@@ -120,17 +128,27 @@ glimpse(stu_qqq)
 
 ## Exploratory Data Analysis (EDA)
 
+In this section 5 analysis will be performed to get insights and uncover truth of factors for singapore student perfomances.
+
 ### 1. Gender
+
+the first factor that we are going to look into is gender.
 
 ```{r}
 ggplot(data = stu_qqq,
        aes(x = gender)) +
-  geom_bar(width = 0.5)+
+  geom_bar(width = 0.5,
+           color = "grey50",
+           fill = "grey90")+
   theme_minimal()
 ```
 
+from the distribution graph above can be seen that the questionnaire have similar number of male and female student.
+
 ::: panel-tabset
 #### Math
+
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores with male have a **SLIGHTLY HIGHER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -176,6 +194,8 @@ ggplot(data = stu_qqq,
 
 #### Science
 
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores with male have a **SLIGHTLY HIGHER** average and median score
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -220,6 +240,8 @@ ggplot(data = stu_qqq,
 
 #### Reading
 
+from the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores with male have a **SLIGHTLY LOWER** average and median score
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -263,6 +285,8 @@ ggplot(data = stu_qqq,
 ```
 :::
 
+Overall, can be concluded that student's performances are **EQUAL** no matter the gender is.
+
 ### 2. School
 
 ```{r}
@@ -291,12 +315,12 @@ stu_qqq_sch <- stu_qqq %>%
 p1 <- ggplot(data = stu_qqq_sch,
        aes(y = average_math_diff)) +
   geom_boxplot(width = 0.1) +
+  stat_boxplot(geom = "errorbar", width = 0.05) +
   stat_summary(aes(x = 0),
                geom = "point",       
                fun.y ="mean",         
                colour ="red", 
                size=1) +
-  xlim(c(-0.5,0.5)) +
   ylim(c(0,220)) +
   scale_x_continuous(NULL, breaks = NULL) +
   theme_minimal()
@@ -304,12 +328,12 @@ p1 <- ggplot(data = stu_qqq_sch,
 p2 <- ggplot(data = stu_qqq_sch,
        aes(y = average_science_diff)) +
   geom_boxplot(width = 0.1) +
+  stat_boxplot(geom = "errorbar", width = 0.05) +
   stat_summary(aes(x = 0),
                geom = "point",       
                fun.y ="mean",         
                colour ="red", 
                size=1) +
-  xlim(c(-0.5,0.5)) +
   ylim(c(0,220)) +
   scale_x_continuous(NULL, breaks = NULL) +
   theme_minimal()
@@ -317,12 +341,12 @@ p2 <- ggplot(data = stu_qqq_sch,
 p3 <- ggplot(data = stu_qqq_sch,
        aes(y = average_read_diff)) +
   geom_boxplot(width = 0.1) +
+  stat_boxplot(geom = "errorbar", width = 0.05) +
   stat_summary(aes(x = 0),
                geom = "point",       
                fun.y ="mean",         
                colour ="red", 
                size=1) +
-  xlim(c(-0.5,0.5)) +
   ylim(c(0,220)) +
   scale_x_continuous(NULL, breaks = NULL) +
   theme_minimal()
@@ -337,7 +361,8 @@ p1|p2|p3
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq,
        aes(x = num_book)) +
-  geom_bar()+
+  geom_bar(color = "grey50",
+           fill = "grey90")+
   theme_minimal()
 ```
 
@@ -361,7 +386,8 @@ stu_qqq_book <- stu_qqq %>%
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
        aes(x=num_book, y=average_math)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
@@ -372,18 +398,20 @@ ggplot(data = stu_qqq_book,
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
        aes(x=num_book, y=average_science)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
-#### Read
+#### Reading
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
        aes(x=num_book, y=average_read)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 :::
@@ -395,7 +423,8 @@ ggplot(data = stu_qqq_book,
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq,
        aes(x = num_transport)) +
-  geom_bar()+
+  geom_bar(color = "grey50",
+           fill = "grey90")+
   theme_minimal()
 ```
 
@@ -419,7 +448,8 @@ stu_qqq_transport <- stu_qqq %>%
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_transport,
        aes(x=num_transport, y=average_math)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
@@ -430,18 +460,20 @@ ggplot(data = stu_qqq_transport,
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_transport,
        aes(x=num_transport, y=average_science)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
-#### Read
+#### Reading
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_transport,
        aes(x=num_transport, y=average_read)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 :::
@@ -451,7 +483,8 @@ ggplot(data = stu_qqq_transport,
 ```{r}
 ggplot(data = stu_qqq,
        aes(x = num_digital_devices)) +
-  geom_bar()+
+  geom_bar(color = "grey50",
+           fill = "grey90")+
   theme_minimal()
 ```
 
@@ -475,7 +508,8 @@ stu_qqq_digital <- stu_qqq %>%
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_digital,
        aes(x=num_digital_devices, y=average_math)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
@@ -486,18 +520,20 @@ ggplot(data = stu_qqq_digital,
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_digital,
        aes(x=num_digital_devices, y=average_science)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 
-#### Read
+#### Reading
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_digital,
        aes(x=num_digital_devices, y=average_read)) +
-  geom_col() +
+  geom_col(color = "grey50",
+           fill = "grey90") +
   theme_minimal()
 ```
 :::
