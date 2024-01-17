@@ -79,7 +79,7 @@ there are 7 layers of grammar of graphics, they are:
 
 -   Coordinate systems define the plane on which data are mapped on the graphic.
 
--   Themes modify all non-data components of a plot, such as main title, sub-title, y-aixs title, or legend background.
+-   Themes modify all non-data components of a plot, such as main title, sub-title, y-axis title, or legend background.
 
 # Essential Grammatical Elements in ggplot2: data
 
