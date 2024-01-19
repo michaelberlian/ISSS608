@@ -19,15 +19,13 @@ In this Take home Exercise we are going to explore the data from [PISA 2022 data
 
 In this take home exercise we are going to utilise several package
 
-1.  tidyverse
-2.  haven
-3.  ggrepel
-4.  patchwork
-5.  ggthemes
-6.  hrbrthemes
+1.  tidyverse (to wrangle and plot our data)
+2.  haven (to read our dataset from sas data type)
+3.  patchwork (to plot multiple plot in the same figure)
+4.  ggrain, to plot ggrain (combination of distribution, box plot, and scatter plot)
 
 ```{r}
-pacman::p_load(tidyverse, haven, ggrepel, patchwork, ggthemes, hrbrthemes)
+pacman::p_load(tidyverse, haven, patchwork, ggrain)
 ```
 
 ### Importing dataset
@@ -122,8 +120,53 @@ stu_qqq$num_digital_devices <- factor(stu_qqq$num_digital_devices, levels = c('N
 
 ### Overview
 
+#### Dataset
+
 ```{r}
 glimpse(stu_qqq)
+```
+
+#### Scores Distribution
+
+```{r}
+p1 <- ggplot(data = stu_qqq,
+       aes(y = math)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.05) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y = "mean",         
+               colour = "red", 
+               size = 1) +
+  ylim(c(0,1000))+
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+p2 <- ggplot(data = stu_qqq,
+       aes(y = science)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.05) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y = "mean",         
+               colour = "red", 
+               size = 1) +
+  ylim(c(0,1000))+
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+p3 <- ggplot(data = stu_qqq,
+       aes(y = read)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.05) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y = "mean",         
+               colour = "red", 
+               size = 1) +
+  ylim(c(0,1000))+
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+
+p1|p2|p3
 ```
 
 ## Exploratory Data Analysis (EDA)
@@ -293,6 +336,8 @@ Overall, can be concluded that student's performances are **EQUAL** no matter th
 length(unique(stu_qqq$school_ID))
 ```
 
+the student that was participating in this questionnaire was from 164 different school in singapore
+
 ```{r}
 average_math_SG <- mean(stu_qqq$math)
 average_scie_SG <- mean(stu_qqq$science)
@@ -308,6 +353,10 @@ stu_qqq_sch <- stu_qqq %>%
 
 ```
 
+on the code above we are going to calculate the average of performance of student across Singapore.
+
+followed by calculating the error or the differences between each school average and the average in singapore.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -318,9 +367,9 @@ p1 <- ggplot(data = stu_qqq_sch,
   stat_boxplot(geom = "errorbar", width = 0.05) +
   stat_summary(aes(x = 0),
                geom = "point",       
-               fun.y ="mean",         
-               colour ="red", 
-               size=1) +
+               fun.y = "mean",         
+               colour = "red", 
+               size = 1) +
   ylim(c(0,220)) +
   scale_x_continuous(NULL, breaks = NULL) +
   theme_minimal()
@@ -354,6 +403,10 @@ p3 <- ggplot(data = stu_qqq_sch,
 p1|p2|p3
 ```
 
+the plots above show that the differences between all study subject were similar. however, the differences between a school and the singapore average are ranged from 0 to 220. and the average differences is around 40. this mean that not every single school in Singapore are having the same performance with each other.
+
+on the other hand, the q3 of the box plot lay around 70 point scores. this mean that almost 75% of school in singapore are located between 0-70 point difference to national average. on the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.
+
 ### 3. Social Economic 1: Book Ownership
 
 ```{r}
@@ -366,16 +419,26 @@ ggplot(data = stu_qqq,
   theme_minimal()
 ```
 
+can be seen from initial plotting that our book ownership are not skewed. Also, there is some data that has no value. Therefore, we are going to remove it from our analysis using `drop_na()`.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show wrangling code"
 stu_qqq_book <- stu_qqq %>%
-  group_by(num_book) %>%
-  mutate(average_math = mean(math),
-         average_science = mean(science),
-         average_read = mean(read)) %>%
-  select(num_book, average_math, average_science, average_read) %>%
-  unique() 
+  select(math, science, read, num_book) %>%
+  drop_na()
+```
+
+here is the new distribution after removing the na value rows.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = stu_qqq_book,
+       aes(x = num_book)) +
+  geom_bar(color = "grey50",
+           fill = "grey90")+
+  theme_minimal()
 ```
 
 ::: panel-tabset
@@ -385,9 +448,11 @@ stu_qqq_book <- stu_qqq %>%
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
-       aes(x=num_book, y=average_math)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
+       aes(y = math, x = num_book)) +
+  geom_violin()+
+  stat_summary(fun = 'mean',
+               geom = 'point',
+               color = 'red')+
   theme_minimal()
 ```
 
@@ -397,9 +462,11 @@ ggplot(data = stu_qqq_book,
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
-       aes(x=num_book, y=average_science)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
+       aes(y = science, x = num_book)) +
+  geom_violin()+
+  stat_summary(fun = 'mean',
+               geom = 'point',
+               color = 'red')+
   theme_minimal()
 ```
 
@@ -409,14 +476,97 @@ ggplot(data = stu_qqq_book,
 #| code-fold: true
 #| code-summary: "Show the code"
 ggplot(data = stu_qqq_book,
-       aes(x=num_book, y=average_read)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
+       aes(y = read, x = num_book)) +
+  geom_violin()+
+  stat_summary(fun = 'mean',
+               geom = 'point',
+               color = 'red')+
   theme_minimal()
 ```
 :::
 
-### 4. Social Economic 2: Vehicle Ownership
+from all the three plots can be seen that with more of number of book owned, the lower value does not change much and the upper limit is growing. further more the red dots which represent mean also going up for every more book owned. however, there is an exception on the student who own more than 500 book, where their average is not raising instead it is lower than students who have 201-500 books.
+
+### 4. Social Economic 2: Digital Device Ownership
+
+```{r}
+ggplot(data = stu_qqq,
+       aes(x = num_digital_devices)) +
+  geom_bar(color = "grey50",
+           fill = "grey90")+
+  theme_minimal()
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show wrangling code"
+stu_qqq_digital <- stu_qqq %>%
+  select(num_digital_devices, math, science, read) %>%
+  drop_na()
+```
+
+```{r}
+ggplot(data = stu_qqq_digital,
+       aes(x = num_digital_devices)) +
+  geom_bar(color = "grey50",
+           fill = "grey90")+
+  theme_minimal()
+```
+
+::: panel-tabset
+#### Math
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = stu_qqq_digital,
+       aes(x = num_digital_devices, y = math)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  stat_summary(aes(x = num_digital_devices),
+               geom = "point",
+               fun.y = "mean",
+               colour = "red",
+               size = 1.5) +
+  theme_minimal()
+```
+
+#### Science
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = stu_qqq_digital,
+       aes(x = num_digital_devices, y = science)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  stat_summary(aes(x = num_digital_devices),
+               geom = "point",
+               fun.y = "mean",
+               colour = "red",
+               size = 1.5) +
+  theme_minimal()
+```
+
+#### Reading
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = stu_qqq_digital,
+       aes(x = num_digital_devices, y = read)) +
+  geom_boxplot()+
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  stat_summary(aes(x = num_digital_devices),
+               geom = "point",
+               fun.y = "mean",
+               colour = "red",
+               size = 1.5) +
+  theme_minimal()
+```
+:::
+
+### 5. Social Economic 3: Vehicle Ownership
 
 ```{r}
 #| code-fold: true
@@ -432,85 +582,28 @@ ggplot(data = stu_qqq,
 #| code-fold: true
 #| code-summary: "Show wrangling code"
 stu_qqq_transport <- stu_qqq %>%
-  group_by(num_transport) %>%
-  mutate(average_math = mean(math),
-         average_science = mean(science),
-         average_read = mean(read)) %>%
-  select(num_transport, average_math, average_science, average_read) %>%
-  unique() 
+  select(math, science, read, num_transport) %>%
+  drop_na() 
 ```
 
-::: panel-tabset
-#### Math
-
 ```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
 ggplot(data = stu_qqq_transport,
-       aes(x=num_transport, y=average_math)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
-```
-
-#### Science
-
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-ggplot(data = stu_qqq_transport,
-       aes(x=num_transport, y=average_science)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
-```
-
-#### Reading
-
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-ggplot(data = stu_qqq_transport,
-       aes(x=num_transport, y=average_read)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
-```
-:::
-
-### 5. Social Economic 3: Digital Device Ownership
-
-```{r}
-ggplot(data = stu_qqq,
-       aes(x = num_digital_devices)) +
+       aes(x = num_transport)) +
   geom_bar(color = "grey50",
            fill = "grey90")+
   theme_minimal()
 ```
 
-```{r}
-#| code-fold: true
-#| code-summary: "Show wrangling code"
-stu_qqq_digital <- stu_qqq %>%
-  group_by(num_digital_devices) %>%
-  mutate(average_math = mean(math),
-         average_science = mean(science),
-         average_read = mean(read)) %>%
-  select(num_digital_devices, average_math, average_science, average_read) %>%
-  unique() 
-```
-
 ::: panel-tabset
 #### Math
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-ggplot(data = stu_qqq_digital,
-       aes(x=num_digital_devices, y=average_math)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
+ggplot(stu_qqq_transport,
+       aes(x = num_transport, y = math, fill= num_transport))+
+  geom_rain() +
+  coord_flip()
 ```
 
 #### Science
@@ -518,11 +611,10 @@ ggplot(data = stu_qqq_digital,
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-ggplot(data = stu_qqq_digital,
-       aes(x=num_digital_devices, y=average_science)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
+ggplot(stu_qqq_transport,
+       aes(x = num_transport, y = science, fill= num_transport))+
+  geom_rain() +
+  coord_flip()
 ```
 
 #### Reading
@@ -530,10 +622,9 @@ ggplot(data = stu_qqq_digital,
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-ggplot(data = stu_qqq_digital,
-       aes(x=num_digital_devices, y=average_read)) +
-  geom_col(color = "grey50",
-           fill = "grey90") +
-  theme_minimal()
+ggplot(stu_qqq_transport,
+       aes(x = num_transport, y = read, fill= num_transport))+
+  geom_rain() +
+  coord_flip()
 ```
 :::
