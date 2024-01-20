@@ -19,13 +19,12 @@ In this Take home Exercise we are going to explore the data from [PISA 2022 data
 
 In this take home exercise we are going to utilise several package
 
-1.  tidyverse (to wrangle and plot our data)
-2.  haven (to read our dataset from sas data type)
-3.  patchwork (to plot multiple plot in the same figure)
-4.  ggrain, to plot ggrain (combination of distribution, box plot, and scatter plot)
+1.  Tidyverse (to wrangle and plot our data)
+2.  Haven (to read our dataset from sas data type)
+3.  Patchwork (to plot multiple plot in the same figure)
 
 ```{r}
-pacman::p_load(tidyverse, haven, patchwork, ggrain)
+pacman::p_load(tidyverse, haven, patchwork)
 ```
 
 ### Importing dataset
@@ -37,7 +36,7 @@ Importing the data in sas data type
 stu_qqq <- read_sas('data/cy08msp_stu_qqq.sas7bdat')
 ```
 
-filtering the data to singapore
+Filtering the data to singapore
 
 ```{r}
 #| eval: false
@@ -45,14 +44,14 @@ stu_qqq_SG <- stu_qqq %>%
   filter(CNT == "SGP")
 ```
 
-export the filtered dataset to rds to ease further data importing
+Export the filtered dataset to rds to ease further data importing
 
 ```{r}
 #| eval: false
 write_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')
 ```
 
-read the exported rds
+Read the exported rds
 
 ```{r}
 stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
@@ -62,7 +61,7 @@ stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
 
 ### Variable preparations
 
--   filtering the columns that will be used for further analysis, in this analysis we are going to take 6 variables, they are:
+-   Filtering the columns that will be used for further analysis, in this analysis we are going to take 6 variables, they are:
 
     -   CNTSCHID = school_id
 
@@ -76,11 +75,11 @@ stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
 
     -   ESCS = social economic
 
--   rename the columns to a more understandable names
+-   Rename the columns to a more understandable names
 
--   recode the answers of questions to a more descriptive measures
+-   Recode the answers of questions to a more descriptive measures
 
--   change the columns data type
+-   Change the columns data type
 
 ```{r}
 stu_qqq <- stu_qqq_SG %>%
@@ -115,7 +114,7 @@ In this section 4 analysis will be performed to get insights and uncover truth o
 
 ### 1. Student Performances
 
-from the initial preview, we can see that there are no NA values for all the grades.
+From the initial preview, we can see that there are no NA values for all the grades.
 
 ```{r}
 stu_qqq_grade <- stu_qqq %>%
@@ -169,11 +168,11 @@ p3 <- ggplot(data = stu_qqq_grade,
 p1|p2|p3
 ```
 
-from the figure above, the distribution of the performances are normal. however, there is a slight higher performance from one to another. (math \> science \> reading). can also be seen that the variance for each performance is quite large. this could mean that student in Singapore does have large performance differences between one and another. this could be caused by multiple reasoning such as the school, gender, and social economic standing.
+From the figure above, the distribution of the performances are normal. However, there is a slight higher performance from one to another. (math \> science \> reading). Can also be seen that the variance for each performance is quite large. This could mean that student in Singapore does have large performance differences between one and another. This could be caused by multiple reasoning such as the school, gender, and social economic standing.
 
 ### 2. Gender
 
-the first factor that we are going to look into is gender.
+The first factor that we are going to look into is gender.
 
 ```{r}
 length(stu_qqq$gender[is.na(stu_qqq$gender)])
@@ -188,12 +187,12 @@ ggplot(data = stu_qqq,
   theme_minimal()
 ```
 
-from the distribution graph above can be seen that the questionnaire have similar number of male and female student.
+From the distribution graph above can be seen that the questionnaire have similar number of male and female student.
 
 ::: panel-tabset
 #### Math
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
+From the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -239,7 +238,7 @@ ggplot(data = stu_qqq,
 
 #### Science
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
+From the graph below, can be seen that there are **VERY SMALL** differences between male and female science scores, with male have a **SLIGHTLY HIGHER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -285,7 +284,7 @@ ggplot(data = stu_qqq,
 
 #### Reading
 
-from the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores, with male have a **SLIGHTLY LOWER** average and median score
+From the graph below, can be seen that there are **VERY SMALL** differences between male and female reading scores, with male have a **SLIGHTLY LOWER** average and median score
 
 ```{r}
 #| code-fold: true
@@ -338,11 +337,13 @@ Overall, can be concluded that student's performances are **EQUAL** no matter th
 length(stu_qqq$school_ID[is.na(stu_qqq$school_ID)])
 ```
 
+There are no NA cell on school ID.
+
 ```{r}
 length(unique(stu_qqq$school_ID))
 ```
 
-the student that was participating in this questionnaire was from 164 different school in singapore
+The student that was participating in this questionnaire was from 164 different school in Singapore
 
 ```{r}
 average_math_SG <- mean(stu_qqq$math)
@@ -359,9 +360,9 @@ stu_qqq_sch <- stu_qqq %>%
 
 ```
 
-on the code above we are going to calculate the average of performance of student across Singapore.
+On the code above we are going to calculate the average of performance of student across Singapore.
 
-followed by calculating the error or the differences between each school average and the average in Singapore.
+Followed by calculating the error or the differences between each school average and the average in Singapore.
 
 ```{r}
 #| code-fold: true
@@ -409,19 +410,19 @@ p3 <- ggplot(data = stu_qqq_sch,
 p1|p2|p3
 ```
 
-the plots above show that the differences between all study subject were similar. however, the differences between a school and the singapore average are ranged from 0 to 220. and the average differences is around 40. this mean that not every single school in Singapore are having the same performance with each other.
+The plots above show that the differences between all study subject were similar. However, the differences between a school and the Singapore average are ranged from 0 to 220. And, the average differences is around 40. This mean that not every single school in Singapore are having the same performance with each other.
 
-on the other hand, the q3 of the box plot lay around 70 point scores. this mean that almost 75% of school in singapore are located between 0-70 point difference to national average. on the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.
+On the other hand, the q3 of the box plot lay around 70 point scores. This mean that almost 75% of school in Singapore are located between 0-70 point difference to national average. On the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.
 
 ### 4. Social Economic
 
-the last factor that are going to be digged is social economic. the social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.
+The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.
 
 ```{r}
 summary(stu_qqq$socio_economic)
 ```
 
-Rhe data contain na value. Therefore, we are going to remove it from our analysis using `drop_na()`.
+The data contain na value. Therefore, we are going to remove it from our analysis using `drop_na()`.
 
 ```{r}
 stu_qqq_socec <- stu_qqq %>%
@@ -429,7 +430,7 @@ stu_qqq_socec <- stu_qqq %>%
   drop_na()
 ```
 
-the code below plot the distribution of student social economic standing in Singapore.
+The code below plot the distribution of student social economic standing in Singapore.
 
 ```{r}
 #| code-fold: true
@@ -455,35 +456,37 @@ cor2 <- round(cor(stu_qqq_socec$science, stu_qqq_socec$socio_economic),2)
 cor3 <- round(cor(stu_qqq_socec$read, stu_qqq_socec$socio_economic),2)
 
 p1 <- ggplot(data = stu_qqq_socec,
-       aes(y = math, x = socio_economic)) +
-  geom_point(size = 0.1)+
-  geom_smooth(method = lm) + 
-  annotate("text", x=0, y=500, label=paste0("r = ", cor1), color = 'red') +
-  theme_minimal()
+             aes(y = math, x = socio_economic)) +
+        geom_point(size = 0.1)+
+        geom_smooth(method = lm) + 
+        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor1), color = 'blue') +
+        theme_minimal()
 
 p2 <- ggplot(data = stu_qqq_socec,
-       aes(y = science, x = socio_economic)) +
-  geom_point(size = 0.1)+
-  geom_smooth(method = lm) +
-  annotate("text", x=0, y=500, label=paste0("r = ", cor2), color = 'red') + 
-  theme_minimal()
+             aes(y = science, x = socio_economic)) +
+        geom_point(size = 0.1)+
+        geom_smooth(method = lm) +
+        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor2), color = 'blue') + 
+        theme_minimal()
 
 p3 <- ggplot(data = stu_qqq_socec,
-       aes(y = read, x = socio_economic)) +
-  geom_point(size = 0.1)+
-  geom_smooth(method = lm) + 
-  annotate("text", x=0, y=500, label=paste0("r = ", cor3), color = 'red') +
-  theme_minimal()
+             aes(y = read, x = socio_economic)) +
+        geom_point(size = 0.1)+
+        geom_smooth(method = lm) + 
+        annotate("text", x = 2.5, y = 600, label=paste0("r = ", cor3), color = 'blue') +
+        theme_minimal()
 
 p1/p2/p3
 ```
 
-from all the 3 plot, can be seen that the scatter are quite distributed across the levels. however, all the correlation between social economic and all the performances are around 0.44 which show weak to medium positive correlation between the social economic and student's performances. can be said that the higher social economic standing of a student, the higher their score will be.
+From all the 3 plot, can be seen that the scatter are quite distributed across all levels. However, all the correlation between social economic and all the performances are around 0.44 which show weak to medium positive correlation between the social economic and student's performances. Can be said that the higher social economic standing of a student, the higher their score will be.
 
 ## Conclusion
 
--   gender does not affect student performances
+-   Student performance between subjects are similar
 
--   not all school are equal
+-   Gender does not affect student performances
 
--   social economic standing play a small part toward students' performances
+-   Not all school in Singapore are equal
+
+-   Social economic standing play a small part toward students' performances

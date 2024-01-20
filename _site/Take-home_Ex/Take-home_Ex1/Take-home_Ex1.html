@@ -246,13 +246,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="importing-packages">Importing packages</h3>
 <p>In this take home exercise we are going to utilise several package</p>
 <ol type="1">
-<li>tidyverse (to wrangle and plot our data)</li>
-<li>haven (to read our dataset from sas data type)</li>
-<li>patchwork (to plot multiple plot in the same figure)</li>
-<li>ggrain, to plot ggrain (combination of distribution, box plot, and scatter plot)</li>
+<li>Tidyverse (to wrangle and plot our data)</li>
+<li>Haven (to read our dataset from sas data type)</li>
+<li>Patchwork (to plot multiple plot in the same figure)</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, haven, patchwork, ggrain)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, haven, patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-dataset" class="level3">
@@ -261,16 +260,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stu_qqq <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="st">'data/cy08msp_stu_qqq.sas7bdat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>filtering the data to singapore</p>
+<p>Filtering the data to singapore</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> stu_qqq <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CNT <span class="sc">==</span> <span class="st">"SGP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>export the filtered dataset to rds to ease further data importing</p>
+<p>Export the filtered dataset to rds to ease further data importing</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(stu_qqq_SG, <span class="st">'data/stu_qqq_SG.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>read the exported rds</p>
+<p>Read the exported rds</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">'data/stu_qqq_SG.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -281,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="variable-preparations" class="level3">
 <h3 class="anchored" data-anchor-id="variable-preparations">Variable preparations</h3>
 <ul>
-<li><p>filtering the columns that will be used for further analysis, in this analysis we are going to take 6 variables, they are:</p>
+<li><p>Filtering the columns that will be used for further analysis, in this analysis we are going to take 6 variables, they are:</p>
 <ul>
 <li><p>CNTSCHID = school_id</p></li>
 <li><p>ST004D01T = gender</p></li>
@@ -290,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>read = average of 10 reading possible values</p></li>
 <li><p>ESCS = social economic</p></li>
 </ul></li>
-<li><p>rename the columns to a more understandable names</p></li>
-<li><p>recode the answers of questions to a more descriptive measures</p></li>
-<li><p>change the columns data type</p></li>
+<li><p>Rename the columns to a more understandable names</p></li>
+<li><p>Recode the answers of questions to a more descriptive measures</p></li>
+<li><p>Change the columns data type</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stu_qqq <span class="ot">&lt;-</span> stu_qqq_SG <span class="sc">%&gt;%</span></span>
@@ -337,7 +336,7 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p>In this section 4 analysis will be performed to get insights and uncover truth of factors for singapore student perfomances.</p>
 <section id="student-performances" class="level3">
 <h3 class="anchored" data-anchor-id="student-performances">1. Student Performances</h3>
-<p>from the initial preview, we can see that there are no NA values for all the grades.</p>
+<p>From the initial preview, we can see that there are no NA values for all the grades.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_grade <span class="ot">&lt;-</span> stu_qqq <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (math, science, read)</span>
@@ -394,11 +393,11 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>from the figure above, the distribution of the performances are normal. however, there is a slight higher performance from one to another. (math &gt; science &gt; reading). can also be seen that the variance for each performance is quite large. this could mean that student in Singapore does have large performance differences between one and another. this could be caused by multiple reasoning such as the school, gender, and social economic standing.</p>
+<p>From the figure above, the distribution of the performances are normal. However, there is a slight higher performance from one to another. (math &gt; science &gt; reading). Can also be seen that the variance for each performance is quite large. This could mean that student in Singapore does have large performance differences between one and another. This could be caused by multiple reasoning such as the school, gender, and social economic standing.</p>
 </section>
 <section id="gender" class="level3">
 <h3 class="anchored" data-anchor-id="gender">2. Gender</h3>
-<p>the first factor that we are going to look into is gender.</p>
+<p>The first factor that we are going to look into is gender.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(stu_qqq<span class="sc">$</span>gender[<span class="fu">is.na</span>(stu_qqq<span class="sc">$</span>gender)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -416,12 +415,12 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>from the distribution graph above can be seen that the questionnaire have similar number of male and female student.</p>
+<p>From the distribution graph above can be seen that the questionnaire have similar number of male and female student.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Math</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Science</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Reading</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>from the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female science scores, with male have a <strong>SLIGHTLY HIGHER</strong> average and median score</p>
+<p>From the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female science scores, with male have a <strong>SLIGHTLY HIGHER</strong> average and median score</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -469,7 +468,7 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>from the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female science scores, with male have a <strong>SLIGHTLY HIGHER</strong> average and median score</p>
+<p>From the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female science scores, with male have a <strong>SLIGHTLY HIGHER</strong> average and median score</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -517,7 +516,7 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<p>from the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female reading scores, with male have a <strong>SLIGHTLY LOWER</strong> average and median score</p>
+<p>From the graph below, can be seen that there are <strong>VERY SMALL</strong> differences between male and female reading scores, with male have a <strong>SLIGHTLY LOWER</strong> average and median score</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -576,13 +575,14 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <pre><code>[1] 0</code></pre>
 </div>
 </div>
+<p>There are no NA cell on school ID.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(stu_qqq<span class="sc">$</span>school_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 164</code></pre>
 </div>
 </div>
-<p>the student that was participating in this questionnaire was from 164 different school in singapore</p>
+<p>The student that was participating in this questionnaire was from 164 different school in Singapore</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>average_math_SG <span class="ot">&lt;-</span> <span class="fu">mean</span>(stu_qqq<span class="sc">$</span>math)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>average_scie_SG <span class="ot">&lt;-</span> <span class="fu">mean</span>(stu_qqq<span class="sc">$</span>science)</span>
@@ -596,8 +596,8 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(school_ID, average_math_diff, average_science_diff, average_read_diff) <span class="sc">%&gt;%</span></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>on the code above we are going to calculate the average of performance of student across Singapore.</p>
-<p>followed by calculating the error or the differences between each school average and the average in Singapore.</p>
+<p>On the code above we are going to calculate the average of performance of student across Singapore.</p>
+<p>Followed by calculating the error or the differences between each school average and the average in Singapore.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -646,12 +646,12 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>the plots above show that the differences between all study subject were similar. however, the differences between a school and the singapore average are ranged from 0 to 220. and the average differences is around 40. this mean that not every single school in Singapore are having the same performance with each other.</p>
-<p>on the other hand, the q3 of the box plot lay around 70 point scores. this mean that almost 75% of school in singapore are located between 0-70 point difference to national average. on the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.</p>
+<p>The plots above show that the differences between all study subject were similar. However, the differences between a school and the Singapore average are ranged from 0 to 220. And, the average differences is around 40. This mean that not every single school in Singapore are having the same performance with each other.</p>
+<p>On the other hand, the q3 of the box plot lay around 70 point scores. This mean that almost 75% of school in Singapore are located between 0-70 point difference to national average. On the other side, there are some school that are having almost 150 point difference either higher or lower against the national average.</p>
 </section>
 <section id="social-economic" class="level3">
 <h3 class="anchored" data-anchor-id="social-economic">4. Social Economic</h3>
-<p>the last factor that are going to be digged is social economic. the social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.</p>
+<p>The last factor that are going to be explored is social economic. The social economic range from -3.55 to 3.28. there are 47 row that has no social economic score.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stu_qqq<span class="sc">$</span>socio_economic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -659,13 +659,13 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 -3.5488 -0.2327  0.4817  0.2904  0.9036  3.2780      47 </code></pre>
 </div>
 </div>
-<p>Rhe data contain na value. Therefore, we are going to remove it from our analysis using <code>drop_na()</code>.</p>
+<p>The data contain na value. Therefore, we are going to remove it from our analysis using <code>drop_na()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_socec <span class="ot">&lt;-</span> stu_qqq <span class="sc">%&gt;%</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(math, science, read, socio_economic) <span class="sc">%&gt;%</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>the code below plot the distribution of student social economic standing in Singapore.</p>
+<p>The code below plot the distribution of student social economic standing in Singapore.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -693,25 +693,25 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>cor3 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(stu_qqq_socec<span class="sc">$</span>read, stu_qqq_socec<span class="sc">$</span>socio_economic),<span class="dv">2</span>)</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq_socec,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> math, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span> </span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">500</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor1), <span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> math, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span> </span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">2.5</span>, <span class="at">y =</span> <span class="dv">600</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor1), <span class="at">color =</span> <span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq_socec,</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> science, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">500</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor2), <span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span> </span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> science, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">2.5</span>, <span class="at">y =</span> <span class="dv">600</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor2), <span class="at">color =</span> <span class="st">'blue'</span>) <span class="sc">+</span> </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span>
 <span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq_socec,</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> read, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span> </span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">500</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor3), <span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> read, <span class="at">x =</span> socio_economic)) <span class="sc">+</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span> </span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">2.5</span>, <span class="at">y =</span> <span class="dv">600</span>, <span class="at">label=</span><span class="fu">paste0</span>(<span class="st">"r = "</span>, cor3), <span class="at">color =</span> <span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>()</span>
 <span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>p1<span class="sc">/</span>p2<span class="sc">/</span>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -719,15 +719,16 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p><img src="Take-home_Ex1_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>from all the 3 plot, can be seen that the scatter are quite distributed across the levels. however, all the correlation between social economic and all the performances are around 0.44 which show weak to medium positive correlation between the social economic and student’s performances. can be said that the higher social economic standing of a student, the higher their score will be.</p>
+<p>From all the 3 plot, can be seen that the scatter are quite distributed across all levels. However, all the correlation between social economic and all the performances are around 0.44 which show weak to medium positive correlation between the social economic and student’s performances. Can be said that the higher social economic standing of a student, the higher their score will be.</p>
 </section>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <ul>
-<li><p>gender does not affect student performances</p></li>
-<li><p>not all school are equal</p></li>
-<li><p>social economic standing play a small part toward students’ performances</p></li>
+<li><p>Student performance between subjects are similar</p></li>
+<li><p>Gender does not affect student performances</p></li>
+<li><p>Not all school in Singapore are equal</p></li>
+<li><p>Social economic standing play a small part toward students’ performances</p></li>
 </ul>
 
 
