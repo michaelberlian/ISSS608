@@ -136,8 +136,8 @@ p1 <- ggplot(data = stu_qqq_grade,
                fun.y = "mean",         
                colour = "red", 
                size = 1) +
-  ylim(c(0,1000))+
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,1000)) +
+  scale_x_continuous("MATH GRADES", breaks = NULL) +
   theme_minimal()
 p2 <- ggplot(data = stu_qqq_grade,
        aes(y = science)) +
@@ -149,8 +149,8 @@ p2 <- ggplot(data = stu_qqq_grade,
                fun.y = "mean",         
                colour = "red", 
                size = 1) +
-  ylim(c(0,1000))+
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,1000)) +
+  scale_x_continuous("SCIENCE GRADES", breaks = NULL) +
   theme_minimal()
 p3 <- ggplot(data = stu_qqq_grade,
        aes(y = read)) +
@@ -162,8 +162,8 @@ p3 <- ggplot(data = stu_qqq_grade,
                fun.y = "mean",         
                colour = "red", 
                size = 1) +
-  ylim(c(0,1000))+
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,1000)) +
+  scale_x_continuous("READING GRADES", breaks = NULL) +
   theme_minimal()
 
 p1|p2|p3
@@ -376,8 +376,8 @@ p1 <- ggplot(data = stu_qqq_sch,
                fun.y = "mean",         
                colour = "red", 
                size = 1) +
-  ylim(c(0,220)) +
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,220)) +
+  scale_x_continuous("math avg grade diff", breaks = NULL) +
   theme_minimal()
 
 p2 <- ggplot(data = stu_qqq_sch,
@@ -389,8 +389,8 @@ p2 <- ggplot(data = stu_qqq_sch,
                fun.y ="mean",         
                colour ="red", 
                size=1) +
-  ylim(c(0,220)) +
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,220)) +
+  scale_x_continuous("science avg grade diff", breaks = NULL) +
   theme_minimal()
 
 p3 <- ggplot(data = stu_qqq_sch,
@@ -402,8 +402,8 @@ p3 <- ggplot(data = stu_qqq_sch,
                fun.y ="mean",         
                colour ="red", 
                size=1) +
-  ylim(c(0,220)) +
-  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous(NULL, limits = c(0,220)) +
+  scale_x_continuous("reading avg grade diff", breaks = NULL) +
   theme_minimal()
 
 p1|p2|p3
@@ -442,6 +442,8 @@ ggplot(data = stu_qqq_socec,
                fun = 'mean',
                aes(x = 0),
                color = 'red') +
+  scale_y_continuous(NULL) +
+  scale_x_continuous('Social Economic Standing', breaks = NULL) +
   theme_minimal()
 ```
 
