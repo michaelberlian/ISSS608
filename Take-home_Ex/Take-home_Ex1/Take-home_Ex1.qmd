@@ -360,7 +360,7 @@ stu_qqq_sch <- stu_qqq %>%
 
 ```
 
-On the code above we are going to calculate the average of performance of student across Singapore.
+On the code above we are going to calculate the average of performance of student for each school across Singapore against Singapore overall average.
 
 Followed by calculating the error or the differences between each school average and the average in Singapore.
 
