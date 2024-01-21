@@ -285,5 +285,26 @@
     "title": "In-class Exercise 1: Now You See It!",
     "section": "Importing PISA data",
     "text": "Importing PISA data\nThe code chunk below uses read_sas() of haven to import PISA data into R\n\nstu_qqq &lt;- read_sas('data/cy08msp_stu_qqq.sas7bdat')\n\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\n\nwrite_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')\n\n\nstu_qqq_SG &lt;- read_rds('data/stu_qqq_SG.rds')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html",
+    "href": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html",
+    "title": "Hands-on Exercise 3",
+    "section": "",
+    "text": "in this hands on exercise, I will explore the functions of ggiraph and plotlyr packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html#prologue",
+    "href": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html#prologue",
+    "title": "Hands-on Exercise 3",
+    "section": "",
+    "text": "in this hands on exercise, I will explore the functions of ggiraph and plotlyr packages"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html#getting-started",
+    "href": "Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html#getting-started",
+    "title": "Hands-on Exercise 3",
+    "section": "Getting started",
+    "text": "Getting started\nwe are going to utilise several packages in this hands on exercise, they are:\n\nggiraph: to create intractivity in ggplot graphics\nplotly: to plot interactive graphs\nDT: to create interactive table for HTML pages (interface to the java script DataTables library)\ntidyverse: R packages to support data science, analysis, and creating statistical graphs\npatchwork: to combine multiple graphs into single figures"
   }
 ]
