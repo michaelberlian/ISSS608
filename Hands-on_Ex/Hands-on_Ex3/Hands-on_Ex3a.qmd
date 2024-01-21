@@ -1,0 +1,95 @@
+---
+title: "Hands-on Exercise 3"
+date: "21 January 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Prologue
+
+in this hands on exercise, I will explore the functions of **ggiraph** and **plotlyr** packages
+
+## Getting started
+
+we are going to utilise several packages in this hands on exercise, they are:
+
+-   ggiraph: to create intractivity in ggplot graphics
+
+-   plotly: to plot interactive graphs
+
+-   DT: to create interactive table for HTML pages (interface to the java script DataTables library)
+
+-   tidyverse: R packages to support data science, analysis, and creating statistical graphs
+
+-   patchwork: to combine multiple graphs into single figures
+
+```{r}
+pacman::p_load(ggiraph, plotly, patchwork, DT, tidyverse)
+```
+
+## Importing data
+
+for this hands on exercise, we are going to import Exam_data.csv using the `read_csv()` from readr packages.
+
+```{r}
+exam_data <- read_csv('data/Exam_data.csv')
+```
+
+## Interactive data visualisation - ggiraph methods
+
+ggiraph is an extension of ggplot2 to create interactive ggplot graphics.
+
+there are 3 arguments to be used from ggiraph toward ggplot geometries, they are:
+
+-   Tooltip: is to display data when mouse is hovering the elements
+
+-   Onclick: give action when the element is clicked
+
+-   Data_id: containing the id to be associated with the elements
+
+### Example
+
+the example below consists of 2 part. the first part is where the graph is created and the next one `girafe()` is to create an interactive svg object
+
+```{r}
+p <- ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot_interactive(
+    aes(tooltip = ID),
+    stackgroups = TRUE, 
+    binwidth = 1, 
+    method = "histodot") +
+  scale_y_continuous(NULL, 
+                     breaks = NULL)
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+## Interactivity
+
+```{r}
+#| echo: false
+p <- ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot_interactive(
+    aes(tooltip = ID),
+    stackgroups = TRUE, 
+    binwidth = 1, 
+    method = "histodot") +
+  scale_y_continuous(NULL, 
+                     breaks = NULL)
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+d
