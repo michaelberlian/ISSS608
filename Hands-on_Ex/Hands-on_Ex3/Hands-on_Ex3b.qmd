@@ -15,9 +15,9 @@ in this hands on exercise we are going to create an animated graphic. we will ut
 
 when creating animations, the plot were not moving, instead there are multiple plot that are appear on each frames. resulting in animation
 
-![](images/Screenshot 2024-01-21 at 17.01.29.png)
+![](images/Screenshot%202024-01-21%20at%2017.01.29.png)
 
-Before we dive into the steps for creating an animated statistical graph, it\'s important to understand some of the key concepts and terminology related to this type of visualization.
+Before we dive into the steps for creating an animated statistical graph, it's important to understand some of the key concepts and terminology related to this type of visualization.
 
 1.  **Frame**: In an animated line graph, each frame represents a different point in time or a different category. When the frame changes, the data points on the graph are updated to reflect the new data.
 
@@ -33,7 +33,7 @@ there are 5 packages that will be used in this hands on, they are:
 
 -   [**gganimate**](https://gganimate.com/), an ggplot extension for creating animated statistical graphs.
 
--   [**gifski**](https://cran.r-project.org/web/packages/gifski/) converts video frames to GIF animations using pngquant\'s fancy features for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that use thousands of colors per frame.
+-   [**gifski**](https://cran.r-project.org/web/packages/gifski/) converts video frames to GIF animations using pngquant's fancy features for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that use thousands of colors per frame.
 
 -   [**gapminder**](https://cran.r-project.org/web/packages/gapminder/): An excerpt of the data available at Gapminder.org. We just want to use its *country_colors* scheme.
 

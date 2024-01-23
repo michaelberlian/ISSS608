@@ -1,0 +1,129 @@
+---
+title: "DataViz Makeover"
+date: "21 January 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+in this take home exercise, I will make over take-home exercise 1 of my classmate. I will try to improve his figures.
+
+## Getting started
+
+### Loading packages
+
+we are going to use several packages beforehand.
+
+```{r}
+pacman::p_load(tidyverse, haven, patchwork)
+```
+
+### Importing dataset
+
+we are going to use the same dataset of student questionnaire, we are going to follow the steps;
+
+1.  Importing the data in sas data type
+
+```{r}
+#| eval: false
+stu_qqq <- read_sas('data/cy08msp_stu_qqq.sas7bdat')
+```
+
+2.  Filtering the data to singapore
+
+```{r}
+#| eval: false
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT == "SGP")
+```
+
+3.  Export the filtered dataset to rds to ease further data importing
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG, 'data/stu_qqq_SG.rds')
+```
+
+4.  Read the exported rds
+
+```{r}
+stu_qqq_SG <- read_rds('data/stu_qqq_SG.rds')
+```
+
+### Data preparation and wrangling
+
+#### Data preparation
+
+-   Filtering the columns that will be used for further analysis, in this analysis we are going to take 6 variables, they are:
+
+    -   CNTSCHID = school_id
+
+    -   ST004D01T = gender
+
+    -   math = average of 10 math possible values
+
+    -   science = average of 10 science possible values
+
+    -   read = average of 10 reading possible values
+
+    -   ESCS = social economic
+
+-   Rename the columns to a more understandable names
+
+-   Recode the answers of questions to a more descriptive measures
+
+-   Change the columns data type
+
+```{r}
+stu_qqq <- stu_qqq_SG %>%
+  mutate(math = rowMeans(select(stu_qqq_SG,
+         PV1MATH,PV2MATH,PV3MATH,PV4MATH,PV5MATH,PV6MATH,PV7MATH,PV8MATH,PV9MATH,PV10MATH)),
+         science = rowMeans(select(stu_qqq_SG,
+         PV1SCIE,PV2SCIE,PV3SCIE,PV4SCIE,PV5SCIE,PV6SCIE,PV7SCIE,PV8SCIE,PV9SCIE,PV10SCIE)),
+         read = rowMeans(select(stu_qqq_SG,
+         PV1READ,PV2READ,PV3READ,PV4READ,PV5READ,PV6READ,PV7READ,PV8READ,PV9READ,PV10READ))
+         ) %>%
+  select(CNTSCHID,ST004D01T,math,science,read,ESCS) %>%
+  rename(c(school_ID = "CNTSCHID", 
+           gender = "ST004D01T",
+           socio_economic = "ESCS")) %>%
+  mutate(gender = recode(gender, 
+                         "1" = "Female", 
+                         "2" = "Male"))
+
+stu_qqq$school_ID <- as.factor(stu_qqq$school_ID)
+stu_qqq$gender <- as.factor(stu_qqq$gender)
+```
+
+```{r}
+glimpse(stu_qqq)
+```
+
+## Visualisation Makeover
+
+### 1. Distribution of student's performance in each subject
+
+![](images/Screenshot 2024-01-23 at 15.07.27.png)
+
+### 2. Student's academic performances in relation to gender
+
+![](images/Screenshot 2024-01-23 at 15.10.11.png)
+
+### 3. The comparison of student's performances between schools
+
+#### 3.1 distribution of average performances
+
+![](images/Screenshot 2024-01-23 at 15.10.30.png)
+
+#### 3.2 distribution of average performances compared to Singapore average
+
+![](images/Screenshot 2024-01-23 at 15.10.48.png)
+
+### 4. Student's performance in regards to their household's socioeconomic status
+
+![](images/Screenshot 2024-01-23 at 15.12.23.png)
