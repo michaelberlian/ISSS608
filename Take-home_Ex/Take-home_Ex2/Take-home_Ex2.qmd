@@ -110,6 +110,59 @@ glimpse(stu_qqq)
 
 ![](images/Screenshot 2024-01-23 at 15.07.27.png)
 
+the goal of the above plot is to show the median, mean, and distribution of the student performances across the subjects.
+
+I believe the plot above can be improved, such as:
+
+-   the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the "score" at x axis
+
+```{=html}
+<!-- -->
+```
+-   the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed
+
+-   we cannot really know the score for the median and mean, adding the score to the label at the annotation could give additional information
+
+-   the minimal space of using patchwork got worse since histogram is used, combination of box plot and violin could be used to give the same information with better visualisation
+
+```{r}
+summary(stu_qqq$math)
+summary(stu_qqq$science)
+summary(stu_qqq$read)
+```
+
+```{r}
+
+p1 <- ggplot(data = stu_qqq,
+       aes(x = math)) +
+  geom_histogram(binwidth = 50,
+                 color = 'grey50',
+                 fill = 'grey90') +
+  scale_x_continuous("Math Scores", limits = c(150,850), breaks = seq(150,850,50)) +
+  scale_y_continuous("Frequency", breaks = seq(0,1300,200)) +
+  theme(panel.background = element_rect(fill="white",colour="white"),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank()) +
+  coord_flip()
+
+p2 <- ggplot(data = stu_qqq,
+       aes(x = science)) +
+  geom_histogram(binwidth = 50,
+                 color = 'grey50',
+                 fill = 'grey90') +
+  scale_x_continuous("Science Scores", limits = c(150,850))
+
+p3 <- ggplot(data = stu_qqq,
+       aes(x = read)) +
+  geom_histogram(binwidth = 50,
+                 color = 'grey50',
+                 fill = 'grey90') +
+  scale_x_continuous("Reading Scores", limits = c(150,850))
+
+p1 | p2 | p3
+```
+
 ### 2. Student's academic performances in relation to gender
 
 ![](images/Screenshot 2024-01-23 at 15.10.11.png)
