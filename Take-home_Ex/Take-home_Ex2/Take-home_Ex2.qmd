@@ -116,7 +116,7 @@ glimpse(stu_qqq)
 
 ### 1. Distribution of student's performance in each subject
 
-![](images/Screenshot 2024-01-23 at 15.07.27.png)
+![](images/Screenshot%202024-01-23%20at%2015.07.27.png)
 
 the goal of the above plot is to show the median, mean, and distribution of the student performances across the subjects.
 
@@ -124,9 +124,8 @@ I believe the plot above can be improved, such as:
 
 -   the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the "score" at x axis (Clarity)
 
-```{=html}
 <!-- -->
-```
+
 -   the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed (Aesthetic)
 
 -   we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information (Clarity)
@@ -274,7 +273,7 @@ p1 | p2 | p3
 
 ### 2. Student's academic performances in relation to gender
 
-![](images/Screenshot 2024-01-23 at 15.10.11.png)
+![](images/Screenshot%202024-01-23%20at%2015.10.11.png)
 
 the plot above was used to show the student performance differences between gender across the subject
 
@@ -298,10 +297,10 @@ there are ways to improve the plot, such as:
       geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "yellow",          
+                 colour = "darkgreen",          
                  size = 1) +
       labs(x = "Math's Score") +
-      scale_y_continuous("Frequency", breaks = seq(150,850,50), limits = c(150,850))+
+      scale_y_continuous("Score", breaks = seq(150,850,50), limits = c(150,850))+
         theme(panel.background = element_rect(fill="white",colour="white"),
               panel.grid.major = element_line(color = "grey80"),
               panel.grid.minor = element_blank(),
@@ -316,7 +315,7 @@ there are ways to improve the plot, such as:
       geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "yellow",          
+                 colour = "darkgreen",          
                  size = 1) +
       ylim(150,850) +
       labs(x = "Reading's Score") +
@@ -335,7 +334,7 @@ there are ways to improve the plot, such as:
       geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "yellow",          
+                 colour = "darkgreen",          
                  size = 1) +
       ylim(150,850) +
       labs(x = "Science's Score") +
@@ -353,7 +352,7 @@ there are ways to improve the plot, such as:
 
 ### 3. The comparison of student's performances between schools
 
-![](images/Screenshot 2024-01-23 at 15.10.30.png)
+![](images/Screenshot%202024-01-23%20at%2015.10.30.png)
 
 the plot above was used to show the average student performance of a school
 
