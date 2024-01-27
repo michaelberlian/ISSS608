@@ -96,6 +96,14 @@ stu_qqq <- stu_qqq_SG %>%
                          "1" = "Female", 
                          "2" = "Male"))
 
+stu_qqq_sch <- stu_qqq %>%
+  group_by(school_ID) %>%
+  summarise(
+    average_math = mean(math),
+    average_read = mean(read),
+    average_scie = mean(science)) %>%
+  unique()
+
 stu_qqq$school_ID <- as.factor(stu_qqq$school_ID)
 stu_qqq$gender <- as.factor(stu_qqq$gender)
 ```
@@ -114,16 +122,16 @@ the goal of the above plot is to show the median, mean, and distribution of the 
 
 I believe the plot above can be improved, such as:
 
--   the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the "score" at x axis
+-   the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the "score" at x axis (Clarity)
 
 ```{=html}
 <!-- -->
 ```
--   the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed
+-   the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed (Aesthetic)
 
--   we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information
+-   we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information (Clarity)
 
--   the minimal space of using patchwork got worse since histogram is used, the figure above gives false impression of reading to be more important with a bigger graph than science and math. this might be caused by having 3 vertical histogram side by side would make each graphs too squeezed. I propose to change the orientation of the graph and make them side by side to reduce the inclarity of the graph.
+-   the minimal space of using patchwork got worse since histogram is used, the figure above gives false impression of reading to be more important with a bigger graph than science and math. this might be caused by having 3 vertical histogram side by side would make each graphs too squeezed. I propose to change the orientation of the graph and make them side by side to reduce the inclarity of the graph. (Aesthetic)
 
 ```{r}
 summary(stu_qqq$math)
@@ -268,31 +276,29 @@ p1 | p2 | p3
 
 ![](images/Screenshot 2024-01-23 at 15.10.11.png)
 
-the plot above was used to show the studend performance differences between gender across the subject
+the plot above was used to show the student performance differences between gender across the subject
 
 there are ways to improve the plot, such as:
 
--   give different colors toward each subject
+-   give different colors toward each subject (Aesthetic)
 
--   a clearer and more attractive title
+-   a clearer and more attractive title (Clarity)
 
--   giving the error bar on the box plot to give better view
+-   giving the error bar on the box plot to give better view (Aesthetic)
 
--   give the legends of the plot
-
--   create more y tick to ease reading each of the box plot attributes
+-   create more y tick to ease reading each of the box plot attributes (Clarity)
 
     ```{r}
     gendermath <- ggplot(data = stu_qqq,
            aes(x = gender,
                y = math)) +
-      geom_boxplot(color = c("pink",'lightblue')) +
       stat_boxplot(geom = "errorbar", 
                    width = 0.25,
-                   color = c("pink",'lightblue'))+
+                   color = c("red",'blue'))+
+      geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "green",          
+                 colour = "yellow",          
                  size = 1) +
       labs(x = "Math's Score") +
       scale_y_continuous("Frequency", breaks = seq(150,850,50), limits = c(150,850))+
@@ -304,13 +310,13 @@ there are ways to improve the plot, such as:
     genderread <- ggplot(data = stu_qqq,
            aes(x = gender,
                y = read)) +
-      geom_boxplot(color = c("pink",'lightblue')) +
       stat_boxplot(geom = "errorbar", 
                    width = 0.25,
-                   color = c("pink",'lightblue'))+
+                   color = c("red",'blue'))+
+      geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "green",          
+                 colour = "yellow",          
                  size = 1) +
       ylim(150,850) +
       labs(x = "Reading's Score") +
@@ -323,13 +329,13 @@ there are ways to improve the plot, such as:
     gendersci <- ggplot(data = stu_qqq,
            aes(x = gender,
                y = science)) +
-      geom_boxplot(color = c("pink",'lightblue')) +
       stat_boxplot(geom = "errorbar", 
                    width = 0.25,
-                   color = c("pink",'lightblue'))+
+                   color = c("red",'blue'))+
+      geom_boxplot(color = c("red",'blue'), fill = c("pink",'lightblue')) +
       geom_point(stat = "summary",        
                  fun.y = "mean",           
-                 colour = "green",          
+                 colour = "yellow",          
                  size = 1) +
       ylim(150,850) +
       labs(x = "Science's Score") +
@@ -347,14 +353,111 @@ there are ways to improve the plot, such as:
 
 ### 3. The comparison of student's performances between schools
 
-#### 3.1 distribution of average performances
-
 ![](images/Screenshot 2024-01-23 at 15.10.30.png)
 
-#### 3.2 distribution of average performances compared to Singapore average
+the plot above was used to show the average student performance of a school
 
-![](images/Screenshot 2024-01-23 at 15.10.48.png)
+there are ways to improve the plot, such as:
 
-### 4. Student's performance in regards to their household's socioeconomic status
+-   Clearer title and axis labels (Clarity)
 
-![](images/Screenshot 2024-01-23 at 15.12.23.png)
+-   More pronounced colour differences between the median line and the histogram (Aesthetic)
+
+-   Create more tick to ease viewing and reduce the axis length (Clarity)
+
+-   Bigger bin for each histogram to make it more tight (Aesthetic)
+
+-   annotate the median value (Clarity)
+
+```{r}
+summary(stu_qqq_sch$average_math)
+
+```
+
+```{r}
+schmath <- ggplot(data = stu_qqq_sch,
+       aes(x = average_math)) +
+  geom_histogram(binwidth=50,
+                 color = "grey50",
+                 fill = "lightblue") +
+  scale_x_continuous("Avg Math Score", limits = c(350,750), breaks = seq(375,725,50)) +
+  scale_y_continuous("No of School", limits = c(0,70), breaks = seq(0,70,5)) +
+  geom_vline(
+    aes(xintercept = median(average_math)),
+    colour="red", 
+    linewidth = 0.8, 
+    linetype = "dashed"
+  ) +
+  annotate(
+    geom = "text", 
+    x = median(stu_qqq_sch$average_math) + 25, 
+    y = 65,
+    label = paste0("Median = \n", round(median(stu_qqq_sch$average_math),2)),
+    color = "red",
+    hjust = 0
+  ) +
+  theme(axis.text.x = element_text(size=5),
+        panel.background = element_rect(fill="white",colour="white"),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank())
+
+schscie <- ggplot(data = stu_qqq_sch,
+       aes(x = average_scie)) +
+  geom_histogram(binwidth=50,
+                 color = "grey50",
+                 fill = "lightblue") +
+  scale_x_continuous("Avg Science Score", limits = c(350,750), breaks = seq(375,725,50)) +
+  scale_y_continuous(NULL, limits = c(0,70), breaks = seq(0,70,5)) +
+  geom_vline(
+    aes(xintercept = median(average_scie)),
+    colour="red", 
+    linewidth = 0.8, 
+    linetype = "dashed"
+  ) +
+  annotate(
+    geom = "text", 
+    x = median(stu_qqq_sch$average_scie) + 25, 
+    y = 65,
+    label = paste0("Median = \n", round(median(stu_qqq_sch$average_read),2)),
+    color = "red",
+    hjust = 0
+  ) +
+  theme(axis.text.x = element_text(size=5),
+        panel.background = element_rect(fill="white",colour="white"),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank())
+
+schread <- ggplot(data = stu_qqq_sch,
+       aes(x = average_read)) +
+  geom_histogram(binwidth=50,
+                 color = "grey50",
+                 fill = "lightblue") +
+  scale_x_continuous("Avg Reading Score", limits = c(350,750), breaks = seq(375,725,50)) +
+  scale_y_continuous(NULL, limits = c(0,70), breaks = seq(0,70,5)) +
+  geom_vline(
+    aes(xintercept = median(average_read)),
+    colour="red", 
+    linewidth = 0.8, 
+    linetype = "dashed"
+  ) +
+  annotate(
+    geom = "text", 
+    x = median(stu_qqq_sch$average_read) + 25, 
+    y = 65,
+    label = paste0("Median = \n", round(median(stu_qqq_sch$average_read),2)),
+    color = "red",
+    hjust = 0
+  ) +
+  theme(axis.text.x = element_text(size=5),
+        panel.background = element_rect(fill="white",colour="white"),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank())
+
+schmath + schscie + schread + plot_annotation(
+  title = 'Average student\'s Performance across Schools',
+  theme = theme(plot.title = element_text(hjust = 0.5))
+)
+```
