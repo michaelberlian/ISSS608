@@ -123,14 +123,13 @@ the goal of the above plot is to show the median, mean, and distribution of the 
 I believe the plot above can be improved, such as:
 
 -   the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the "score" at x axis (Clarity)
-
-<!-- -->
-
 -   the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed (Aesthetic)
-
 -   we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information (Clarity)
-
 -   the minimal space of using patchwork got worse since histogram is used, the figure above gives false impression of reading to be more important with a bigger graph than science and math. this might be caused by having 3 vertical histogram side by side would make each graphs too squeezed. I propose to change the orientation of the graph and make them side by side to reduce the inclarity of the graph. (Aesthetic)
+
+Sketches :
+
+![](images/Screenshot 2024-01-28 at 14.48.35.png){width="931"}
 
 ```{r}
 summary(stu_qqq$math)
@@ -290,6 +289,10 @@ there are ways to improve the plot, such as:
 
 -   create more y tick to ease reading each of the box plot attributes (Clarity)
 
+Sketches :
+
+-   ![](images/Screenshot 2024-01-28 at 14.49.33.png)
+
     ```{r}
     gendermath <- ggplot(data = stu_qqq,
            aes(x = gender,
@@ -370,6 +373,10 @@ there are ways to improve the plot, such as:
 -   Bigger bin for each histogram to make it more tight (Aesthetic)
 
 -   annotate the median value (Clarity)
+
+Sketches :
+
+![](images/Screenshot 2024-01-28 at 14.51.28.png)
 
 ```{r}
 summary(stu_qqq_sch$average_math)
