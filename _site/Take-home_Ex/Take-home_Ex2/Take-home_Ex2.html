@@ -371,13 +371,12 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <p>I believe the plot above can be improved, such as:</p>
 <ul>
 <li>the x axis could be more clearer, instead of putting the subject as a title, the subject can be put before the “score” at x axis (Clarity)</li>
+<li>the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed (Aesthetic)</li>
+<li>we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information (Clarity)</li>
+<li>the minimal space of using patchwork got worse since histogram is used, the figure above gives false impression of reading to be more important with a bigger graph than science and math. this might be caused by having 3 vertical histogram side by side would make each graphs too squeezed. I propose to change the orientation of the graph and make them side by side to reduce the inclarity of the graph. (Aesthetic)</li>
 </ul>
-<!-- -->
-<ul>
-<li><p>the mean line color is very similar as the bar color resulting in blended colour between both, therefore the color could be changed (Aesthetic)</p></li>
-<li><p>we cannot really know the score for the median and mean, adding the score to the label using annotation could give additional information (Clarity)</p></li>
-<li><p>the minimal space of using patchwork got worse since histogram is used, the figure above gives false impression of reading to be more important with a bigger graph than science and math. this might be caused by having 3 vertical histogram side by side would make each graphs too squeezed. I propose to change the orientation of the graph and make them side by side to reduce the inclarity of the graph. (Aesthetic)</p></li>
-</ul>
+<p>Sketches :</p>
+<p><img src="images/Screenshot 2024-01-28 at 14.48.35.png" class="img-fluid" width="931"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stu_qqq<span class="sc">$</span>math)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -543,7 +542,11 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <li><p>give different colors toward each subject (Aesthetic)</p></li>
 <li><p>a clearer and more attractive title (Clarity)</p></li>
 <li><p>giving the error bar on the box plot to give better view (Aesthetic)</p></li>
-<li><p>create more y tick to ease reading each of the box plot attributes (Clarity)</p>
+<li><p>create more y tick to ease reading each of the box plot attributes (Clarity)</p></li>
+</ul>
+<p>Sketches :</p>
+<ul>
+<li><p><img src="images/Screenshot 2024-01-28 at 14.49.33.png" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gendermath <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> stu_qqq,</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> gender,</span>
@@ -623,6 +626,8 @@ $ socio_economic &lt;dbl&gt; 0.1836, 0.8261, -1.0357, -0.9606, 0.0856, 0.1268, -
 <li><p>Bigger bin for each histogram to make it more tight (Aesthetic)</p></li>
 <li><p>annotate the median value (Clarity)</p></li>
 </ul>
+<p>Sketches :</p>
+<p><img src="images/Screenshot 2024-01-28 at 14.51.28.png" class="img-fluid"></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stu_qqq_sch<span class="sc">$</span>average_math)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
