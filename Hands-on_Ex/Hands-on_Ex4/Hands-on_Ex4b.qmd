@@ -1,0 +1,113 @@
+---
+title: "Hands-on_Exercise 4b: Visual Statistical Analysis"
+date: "28 January 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+in this hands on exercise, we we explore:
+
+-   ggstatsplot package to create visual graphics with rich statistical information
+
+-   performance package to visualise model diagnostics
+
+-   parameteres package to visualise model parameters
+
+## Visual statistical analysis with ggstatsplot
+
+ggstats plot is ggplot2 extension to create a more detail information rich plot graphic
+
+it is an alternative statistical inference method
+
+it is a best practice for statistical reporting
+
+## Getting Started
+
+### Loading and installing package
+
+```{r}
+pacman::p_load(ggstatsplot, tidyverse)
+```
+
+### immporting data
+
+```{r}
+exam <- read_csv('data/Exam_data.csv')
+```
+
+## visualising ggstatsplot
+
+### gghistostats: one-sample test
+
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "bayes",
+  test.value = 60,
+  xlab = "English scores"
+)
+```
+
+### ggbetweenstats: two-sample test
+
+```{r}
+ggbetweenstats(
+  data = exam,
+  x = GENDER, 
+  y = MATHS,
+  type = "np",
+  messages = FALSE
+)
+```
+
+### ggbetweenstats: one way ANOVE
+
+```{r}
+ggbetweenstats(
+  data = exam,
+  x = RACE, 
+  y = ENGLISH,
+  type = "p",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+```
+
+### ggscatterstats: Correlation significance test
+
+```{r}
+ggscatterstats(
+  data = exam,
+  x = MATHS,
+  y = ENGLISH,
+  marginal = FALSE,
+  )
+```
+
+### ggbarstats: association significance test
+
+```{r}
+exam1 <- exam %>% 
+  mutate(MATHS_bins = 
+           cut(MATHS, 
+               breaks = c(0,60,75,85,100))
+)
+```
+
+```{r}
+ggbarstats(exam1, 
+           x = MATHS_bins, 
+           y = GENDER)
+```
