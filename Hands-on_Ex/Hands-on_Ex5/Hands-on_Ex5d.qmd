@@ -1,0 +1,136 @@
+---
+title: "Hands-on_Exercise 5d: Visual Multivariate Analysis with Parallel Coordinates Plot"
+date: "5 February 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+Parallel coordinates plot is a data visualisation specially designed for visualising and analysing multivariate, numerical data. It is ideal for comparing multiple variables together and seeing the relationships between them. For example, the variables contribute to Happiness Index. Parallel coordinates was invented by [Alfred Inselberg](http://www.math.tau.ac.il/~aiisreal/) in the 1970s as a way to visualize high-dimensional data. This data visualisation technique is more often found in academic and scientific communities than in business and consumer data visualizations. As pointed out by [Stephen Few](https://www.perceptualedge.com/articles/b-eye/parallel_coordinates.pdf)(2006), \"This certainly isn\'t a chart that you would present to the board of directors or place on your Web site for the general public. In fact, the strength of parallel coordinates isn\'t in their ability to communicate some truth in the data to others, but rather in their ability to bring meaningful multivariate patterns and comparisons to light when used interactively for analysis.\" For example, parallel coordinates plot can be used to characterise clusters detected during customer segmentation.
+
+By the end of this hands-on exercise, you will gain hands-on experience on:
+
+-   plotting statistic parallel coordinates plots by using *ggparcoord()* of **GGally** package,
+
+-   plotting interactive parallel coordinates plots by using **parcoords** package, and
+
+-   plotting interactive parallel coordinates plots by using **parallelPlot** package.
+
+## Getting Started
+
+### importing and loading packages
+
+```{r}
+pacman::p_load(GGally, parallelPlot, tidyverse)
+```
+
+### data preparation
+
+```{r}
+wh <- read_csv("data/WHData-2018.csv")
+```
+
+## plotting static parallel coordinate plot
+
+In this section, you will learn how to plot static parallel coordinates plot by using [`ggparcoord()`](https://ggobi.github.io/ggally/reference/ggparcoord.html) of **GGally** package. Before getting started, it is a good practice to read the function description in detail.
+
+### basic plot
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12))
+```
+
+### with boxplot
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Parallel Coordinates Plot of World Happines Variables")
+```
+
+### with facet
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Multiple Parallel Coordinates Plots of World Happines Variables by Region") +
+  facet_wrap(~ Region)
+```
+
+### rotating x-axis
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Multiple Parallel Coordinates Plots of World Happines Variables by Region") +
+  facet_wrap(~ Region) + 
+  theme(axis.text.x = element_text(angle = 30))
+```
+
+### adjusting x-axis
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Multiple Parallel Coordinates Plots of World Happines Variables by Region") +
+  facet_wrap(~ Region) + 
+  theme(axis.text.x = element_text(angle = 30, hjust=1))
+```
+
+## Parallelplot method
+
+### basic
+
+```{r}
+wh <- wh %>%
+  select("Happiness score", c(7:12))
+parallelPlot(wh,
+             width = 320,
+             height = 250)
+```
+
+### rotate axis
+
+```{r}
+parallelPlot(wh,
+             rotateTitle = TRUE)
+```
+
+### changing color scheme
+
+```{r}
+parallelPlot(wh,
+             continuousCS = "YlOrRd",
+             rotateTitle = TRUE)
+```
+
+### with histogram
+
+```{r}
+histoVisibility <- rep(TRUE, ncol(wh))
+parallelPlot(wh,
+             rotateTitle = TRUE,
+             histoVisibility = histoVisibility)
+```
