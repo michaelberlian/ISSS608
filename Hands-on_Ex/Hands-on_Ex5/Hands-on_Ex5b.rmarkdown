@@ -9,6 +9,7 @@ execute:
 editor: visual
 ---
 
+
 ## Overview
 
 Correlation coefficient is a popular statistic that use to measure the type and strength of the relationship between two variables. The values of a correlation coefficient ranges between -1.0 and 1.0. A correlation coefficient of 1 shows a perfect linear relationship between the two variables, while a -1.0 shows a perfect inverse relationship between the two variables. A correlation coefficient of 0.0 shows no linear relationship between the two variables.
@@ -35,6 +36,7 @@ In this hands-on exercise, you will learn how to plot data visualisation for vis
 
 ### Importing and downloading packages
 
+
 ```{r}
 pacman::p_load(corrplot, ggstatsplot, tidyverse)
 ```
@@ -59,9 +61,11 @@ write_csv(wine, "data/wine_quality.csv")
 wine <- read_csv("data/wine_quality.csv")
 ```
 
+
 ## Pairs Method
 
 ### Basic Correlation
+
 
 ```{r}
 pairs(wine[,1:11])
@@ -71,7 +75,9 @@ pairs(wine[,1:11])
 pairs(wine[,2:12])
 ```
 
+
 ### Drawing the lower corner
+
 
 ```{r}
 pairs(wine[,2:12], upper.panel = NULL)
@@ -81,9 +87,11 @@ pairs(wine[,2:12], upper.panel = NULL)
 pairs(wine[,2:12], lower.panel = NULL)
 ```
 
+
 ### Coefficient Correlation
 
 plotting the correlation scatter plot on lower side and plotting the correlation value on the upper side
+
 
 ```{r}
 
@@ -101,6 +109,7 @@ text(0.5, 0.5, txt, cex = cex.cor * (1 + r) / 2)
 pairs(wine[,2:12], 
       upper.panel = panel.cor)
 ```
+
 
 ## ggcorrmat method
 
@@ -122,6 +131,7 @@ In this section, you will learn how to visualising correlation matrix by using 
 
 On of the advantage of using *ggcorrmat()* over many other methods to visualise a correlation matrix is it's ability to provide a comprehensive and yet professional statistical report as shown in the figure below.
 
+
 ```{r}
 ggstatsplot::ggcorrmat(
   data = wine, 
@@ -140,7 +150,9 @@ ggstatsplot::ggcorrmat(
 )
 ```
 
+
 The sample sub-code chunk can be used to control specific component of the plot such as the font size of the x-axis, y-axis, and the statistical report.
+
 
 ```{r}
 ggplot.component = list(
@@ -149,9 +161,11 @@ ggplot.component = list(
       axis.text.y = element_text(size = 8)))
 ```
 
+
 ## multiple correlation plot
 
 Since ggstasplot is an extension of ggplot2, it also supports faceting. However the feature is not available in *ggcorrmat()* but in the [*grouped_ggcorrmat()*](https://indrajeetpatil.github.io/ggstatsplot/reference/grouped_ggcorrmat.html) of **ggstatsplot**.
+
 
 ```{r}
 grouped_ggcorrmat(
@@ -173,21 +187,26 @@ grouped_ggcorrmat(
 )
 ```
 
+
 ## Corrplot method
 
 Before we can plot a corrgram using *corrplot()*, we need to compute the correlation matrix of wine data frame.
 
 In the code chunk below, [*cor()*](https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/cor) of R Stats is used to compute the correlation matrix of wine data frame.
 
+
 ```{r}
 wine.cor <- cor(wine[, 1:11])
 ```
 
+
 Next, [*corrplot()*](https://www.rdocumentation.org/packages/corrplot/versions/0.2-0/topics/corrplot) is used to plot the corrgram by using all the default setting as shown in the code chunk below.
+
 
 ```{r}
 corrplot(wine.cor)
 ```
+
 
 ### geometry of corrplot
 
@@ -195,12 +214,15 @@ available geometry: circle, square, ellipse, number, shade, color and pie
 
 using square
 
+
 ```{r}
 corrplot(wine.cor, 
          method = "square") 
 ```
 
+
 using ellipse
+
 
 ```{r}
 
@@ -208,7 +230,9 @@ corrplot(wine.cor,
          method = "ellipse") 
 ```
 
+
 ### layout of corrplot
+
 
 ```{r}
 corrplot(wine.cor, 
@@ -224,9 +248,11 @@ corrplot(wine.cor,
          tl.col = "black")
 ```
 
+
 ### mixed layout
 
 number - square
+
 
 ```{r}
 corrplot.mixed(wine.cor, 
@@ -237,7 +263,9 @@ corrplot.mixed(wine.cor,
                tl.col = "black")
 ```
 
+
 ellipse - number
+
 
 ```{r}
 corrplot.mixed(wine.cor, 
@@ -248,15 +276,19 @@ corrplot.mixed(wine.cor,
                tl.col = "black")
 ```
 
+
 ### correlation with significant test
 
 With corrplot package, we can use the *cor.mtest()* to compute the p-values and confidence interval for each pair of variables.
+
 
 ```{r}
 wine.sig = cor.mtest(wine.cor, conf.level= .95)
 ```
 
+
 We can then use the *p.mat* argument of *corrplot* function as shown in the code chunk below.
+
 
 ```{r}
 corrplot(wine.cor,
@@ -268,6 +300,7 @@ corrplot(wine.cor,
          p.mat = wine.sig$p,
          sig.level = .05)
 ```
+
 
 ### reordering
 
@@ -285,6 +318,7 @@ Matrix reorder is very important for mining the hiden structure and pattern in a
 
 "AOE", "FPC", "hclust", "alphabet". More algorithms can be found in **seriation** package.
 
+
 ```{r}
 corrplot.mixed(wine.cor, 
                lower = "ellipse", 
@@ -295,9 +329,11 @@ corrplot.mixed(wine.cor,
                tl.col = "black")
 ```
 
+
 ### clustering reordering
 
 If using **hclust**, ***corrplot()*** can draw rectangles around the corrgram based on the results of hierarchical clustering.
+
 
 ```{r}
 corrplot(wine.cor, 
@@ -309,4 +345,6 @@ corrplot(wine.cor,
          addrect = 3)
 ```
 
+
 ## 
+
