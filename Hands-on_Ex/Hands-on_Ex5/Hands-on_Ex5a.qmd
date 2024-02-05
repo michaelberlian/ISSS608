@@ -1,0 +1,136 @@
+---
+title: "Hands-on_Exercise 5a: Creating Ternary Plot with R"
+date: "4 February 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+Ternary plots are a way of displaying the distribution and variability of three-part compositional data. (For example, the proportion of aged, economy active and young population or sand, silt, and clay in soil.) It's display is a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.
+
+In this hands-on, you will learn how to build ternary plot programmatically using R for visualising and analysing population structure of Singapore.
+
+The hands-on exercise consists of four steps:
+
+-   Install and launch **tidyverse** and **ggtern** packages.
+
+-   Derive three new measures using *mutate()* function of **dplyr** package.
+
+-   Build a static ternary plot using *ggtern()* function of **ggtern** package.
+
+-   Build an interactive ternary plot using *plot-ly()* function of **Plotly R** package.
+
+## Getting Started
+
+### Importing and installing packages
+
+-   tidyverse
+
+-   plotly: interactivity of the plots
+
+-   ggtern: plotting ternary plot
+
+```{r}
+pacman::p_load(tidyverse, plotly, ggtern)
+```
+
+### Data Preparation
+
+we are going to use Singapore resident population by planning area, age, and sex per year from 2000 to 2018
+
+```{r}
+#Reading the data into R environment
+pop_data <- read_csv("data/respopagsex2000to2018_tidy.csv") 
+```
+
+we are going to change the data format and combine the ages.
+
+-   young = 0 - 24 years old
+
+-   active = 25 - 64 years old
+
+-   old = 65+ years old
+
+```{r}
+#Deriving the young, economy active and old measures
+agpop_mutated <- pop_data %>%
+  mutate(`Year` = as.character(Year))%>%
+  spread(AG, Population) %>%
+  mutate(YOUNG = rowSums(.[4:8]))%>%
+  mutate(ACTIVE = rowSums(.[9:16]))  %>%
+  mutate(OLD = rowSums(.[17:21])) %>%
+  mutate(TOTAL = rowSums(.[22:24])) %>%
+  filter(Year == 2018)%>%
+  filter(TOTAL > 0)
+```
+
+## Plotting ternary diagram
+
+### static ternary diagram
+
+plotting area based on percentage of young, active, and aold
+
+```{r}
+#Building the static ternary plot
+ggtern(data=agpop_mutated,aes(x=YOUNG,y=ACTIVE, z=OLD)) +
+  geom_point()
+```
+
+adding elements styles
+
+```{r}
+#Building the static ternary plot
+ggtern(data=agpop_mutated, aes(x=YOUNG,y=ACTIVE, z=OLD)) +
+  geom_point() +
+  labs(title="Population structure, 2015") +
+  theme_rgbw()
+```
+
+### plotting more interactive ternary diagram
+
+```{r}
+# reusable function for creating annotation object, title on top left
+label <- function(txt) {
+  list(
+    text = txt, 
+    x = 0.1, y = 1,
+    ax = 0, ay = 0,
+    xref = "paper", yref = "paper", 
+    align = "center",
+    font = list(family = "serif", size = 15, color = "white"),
+    bgcolor = "#b3b3b3", bordercolor = "black", borderwidth = 2
+  )
+}
+
+# reusable function for axis formatting, format of hover effect
+axis <- function(txt) {
+  list(
+    title = txt, tickformat = ".0%", tickfont = list(size = 10)
+  )
+}
+
+ternaryAxes <- list(
+  aaxis = axis("Young"), 
+  baxis = axis("Active"), 
+  caxis = axis("Old")
+)
+
+# Initiating a plotly visualization 
+plot_ly(
+  agpop_mutated, 
+  a = ~YOUNG, 
+  b = ~ACTIVE, 
+  c = ~OLD, 
+  color = I("black"), 
+  type = "scatterternary"
+) %>%
+  layout(
+    annotations = label("Ternary Markers"), 
+    ternary = ternaryAxes
+  )
+```

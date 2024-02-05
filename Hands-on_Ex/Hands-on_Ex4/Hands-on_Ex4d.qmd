@@ -103,7 +103,7 @@ df <- covid19 %>%
 fit.mean <- weighted.mean(df$rate, 1/df$rate.se^2)
 ```
 
-### calculating lower and upper limit for 0.95 and 0.99 CI 
+### calculating lower and upper limit for 0.95 and 0.99 CI
 
 ```{r}
 number.seq <- seq(1, max(df$Positive), 1)
