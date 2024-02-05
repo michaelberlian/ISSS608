@@ -641,17 +641,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="reordering" class="level3">
 <h3 class="anchored" data-anchor-id="reordering">reordering</h3>
-<p>Matrix reorder is very important for mining the hiden structure and pattern in a corrgram. By default, the order of attributes of a corrgram is sorted according to the correlation matrix (i.e.&nbsp;"original"). The default setting can be over-write by using the&nbsp;<em>order</em>&nbsp;argument of&nbsp;<em>corrplot()</em>. Currently,&nbsp;<strong>corrplot</strong>package support four sorting methods, they are:</p>
+<p>Matrix reorder is very important for mining the hiden structure and pattern in a corrgram. By default, the order of attributes of a corrgram is sorted according to the correlation matrix (i.e.&nbsp;“original”). The default setting can be over-write by using the&nbsp;<em>order</em>&nbsp;argument of&nbsp;<em>corrplot()</em>. Currently,&nbsp;<strong>corrplot</strong>package support four sorting methods, they are:</p>
 <ul>
-<li><p>"AOE" is for the angular order of the eigenvectors. See Michael Friendly (2002) for details.</p></li>
-<li><p>"FPC" for the first principal component order.</p></li>
-<li><p>"hclust" for hierarchical clustering order, and "hclust.method" for the agglomeration method to be used.</p>
+<li><p>“AOE” is for the angular order of the eigenvectors. See Michael Friendly (2002) for details.</p></li>
+<li><p>“FPC” for the first principal component order.</p></li>
+<li><p>“hclust” for hierarchical clustering order, and “hclust.method” for the agglomeration method to be used.</p>
 <ul>
-<li>"hclust.method" should be one of "ward", "single", "complete", "average", "mcquitty", "median" or "centroid".</li>
+<li>“hclust.method” should be one of “ward”, “single”, “complete”, “average”, “mcquitty”, “median” or “centroid”.</li>
 </ul></li>
-<li><p>"alphabet" for alphabetical order.</p></li>
+<li><p>“alphabet” for alphabetical order.</p></li>
 </ul>
-<p>"AOE", "FPC", "hclust", "alphabet". More algorithms can be found in&nbsp;<strong>seriation</strong>&nbsp;package.</p>
+<p>“AOE”, “FPC”, “hclust”, “alphabet”. More algorithms can be found in&nbsp;<strong>seriation</strong>&nbsp;package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot.mixed</span>(wine.cor, </span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">lower =</span> <span class="st">"ellipse"</span>, </span>
