@@ -39,7 +39,7 @@ The data.frame *realis2018* is in trasaction record form, which is highly disa
 
 Two key verbs of **dplyr** package, namely: *group_by()* and *summarize()* will be used to perform these steps.
 
-*group_by()* breaks down a data.frame into specified groups of rows. When you then apply the verbs above on the resulting object they\'ll be automatically applied \"by group\".
+*group_by()* breaks down a data.frame into specified groups of rows. When you then apply the verbs above on the resulting object they'll be automatically applied "by group".
 
 Grouping affects the verbs as follows:
 
@@ -47,7 +47,7 @@ Grouping affects the verbs as follows:
 
 -   grouped *arrange()* is the same as ungrouped; unless you set *.by_group = TRUE*, in which case it orders first by the grouping variables.
 
--   *mutate()* and *filter()* are most useful in conjunction with window functions (like *rank()*, or *min(x) == x*). They are described in detail in vignette(\"window-functions\").
+-   *mutate()* and *filter()* are most useful in conjunction with window functions (like *rank()*, or *min(x) == x*). They are described in detail in vignette("window-functions").
 
 -   *sample_n()* and *sample_frac()* sample the specified number/fraction of rows in each group.
 
@@ -158,7 +158,7 @@ treemap(realis2018_selected,
 
 The squarified treemap algorithm (Bruls et al., 2000) produces good aspect ratios, but ignores the sorting order of the rectangles (sortID). The ordered treemap, pivot-by-size, algorithm (Bederson et al., 2002) takes the sorting order (sortID) into account while aspect ratios are still acceptable.
 
-### algorithm argument 
+### algorithm argument
 
 ```{r}
 treemap(realis2018_selected,
@@ -193,7 +193,7 @@ treemap(realis2018_selected,
 
 ## Treemapify
 
-**treemapify** is a R package specially developed to draw treemaps in **ggplot2**. In this section, you will learn how to designing treemps closely resemble treemaps designing in previous section by using **treemapify**. Before you getting started, you should read [Introduction to \"treemapify\"](https://cran.r-project.org/web/packages/treemapify/vignettes/introduction-to-treemapify.html) its [user guide](https://cran.r-project.org/web/packages/treemapify/treemapify.pdf).
+**treemapify** is a R package specially developed to draw treemaps in **ggplot2**. In this section, you will learn how to designing treemps closely resemble treemaps designing in previous section by using **treemapify**. Before you getting started, you should read [Introduction to "treemapify"](https://cran.r-project.org/web/packages/treemapify/vignettes/introduction-to-treemapify.html) its [user guide](https://cran.r-project.org/web/packages/treemapify/treemapify.pdf).
 
 ### Basic Tree Map
 
