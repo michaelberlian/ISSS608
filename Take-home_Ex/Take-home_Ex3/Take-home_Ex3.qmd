@@ -1,0 +1,104 @@
+---
+title: "Take-home_Exercise 3"
+date: "5 February 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Overview
+
+In this take home we are going to visualise and analyse mean temperature in Changi station in december 2023, 2013, 2003, 1993, 1983.
+
+## Getting Started
+
+Importing all the packages needed
+
+```{r}
+pacman::p_load(tidyverse, ggthemes, plotly, ggdist)
+```
+
+## Data Preparation
+
+```{r}
+period1 <- read_csv('data/DAILYDATA_S24_198312.csv')
+period2 <- read_csv('data/DAILYDATA_S24_199312.csv')
+period3 <- read_csv('data/DAILYDATA_S24_200312.csv')
+period4 <- read_csv('data/DAILYDATA_S24_201312.csv')
+period5 <- read_csv('data/DAILYDATA_S24_202312.csv')
+```
+
+```{r}
+weather <- rbind(period1,period2,period3,period4,period5)
+```
+
+```{r}
+weather <- weather %>%
+  mutate (mean_temp = `Mean Temperature (°C)`) %>%
+  select (Year, Day, mean_temp)
+
+weather$Day <- as.factor(weather$Day)
+weather$Year <- as.factor(weather$Year)
+```
+
+## Visualisation
+
+```{r}
+p <- ggplot(weather, 
+       aes(Day, 
+           Year, 
+           fill = mean_temp)) + 
+geom_tile(color = "white", 
+          size = 0.1) + 
+theme_tufte(base_family = "Helvetica") +
+scale_fill_gradient(name = "Temperature",
+                    low = "sky blue", 
+                    high = "dark blue") +
+labs(x = NULL, 
+     y = NULL, 
+     title = "Temperature on December in Changi Station") +
+theme(plot.title = element_text(hjust = 0.5),
+      legend.title = element_text(size = 8),
+      legend.text = element_text(size = 6))
+
+ggplotly(p)
+```
+
+```{r}
+weather_mean <- weather %>%
+  group_by(Year) %>%
+  mutate(temp = mean(mean_temp)) %>% 
+  select (Year, temp) %>%
+  unique()
+```
+
+```{r}
+p <- ggplot(weather_mean,
+       aes(Year, temp, group = 1)) +
+  geom_line() +
+  theme_minimal()
+
+ggplotly(p)
+```
+
+```{r}
+weather_changes <- weather_mean %>%
+  mutate(type = 1) %>%
+  group_by(type) %>%
+  mutate(change = temp - lag(temp, default = temp[1]))
+```
+
+```{r}
+weather_changes %>%
+  ggplot(aes(x = 1, 
+             y = change)) +
+  stat_pointinterval() +
+  labs(
+    title = "Visualising confidence intervals of monthly mean temperature",
+    subtitle = "Mean Point + Multiple-interval plot") +
+  scale_x_continuous(NULL, breaks = NULL) +
+  theme_minimal()
+```

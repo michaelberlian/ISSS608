@@ -824,5 +824,40 @@
     "title": "Hands-on_Exercise 6: Visualising and Analysing Time-Oriented Data",
     "section": "Plotting Slopegraph",
     "text": "Plotting Slopegraph\nIn this section you will learn how to plot a slopegraph by using R.\nBefore getting start, make sure that CGPfunctions has been installed and loaded onto R environment. Then, refer to Using newggslopegraph to learn more about the function. Lastly, read more about newggslopegraph() and its arguments by referring to this link.\n\nImporting the data\nwe are going to use rice data\n\nrice &lt;- read_csv(\"data/rice.csv\")\n\n\n\nplotting the slopegraph\n\nrice %&gt;% \n  mutate(Year = factor(Year)) %&gt;%\n  filter(Year %in% c(1961, 1980)) %&gt;%\n  newggslopegraph(Year, Yield, Country,\n                Title = \"Rice Yield of Top 11 Asian Counties\",\n                SubTitle = \"1961-1980\")"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html",
+    "title": "Take-home_Exercise 3",
+    "section": "",
+    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in december 2023, 2013, 2003, 1993, 1983."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#overview",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#overview",
+    "title": "Take-home_Exercise 3",
+    "section": "",
+    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in december 2023, 2013, 2003, 1993, 1983."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#getting-started",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#getting-started",
+    "title": "Take-home_Exercise 3",
+    "section": "Getting Started",
+    "text": "Getting Started\nImporting all the packages needed\n\npacman::p_load(tidyverse, ggthemes, plotly, ggdist)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#data-preparation",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#data-preparation",
+    "title": "Take-home_Exercise 3",
+    "section": "Data Preparation",
+    "text": "Data Preparation\n\nperiod1 &lt;- read_csv('data/DAILYDATA_S24_198312.csv')\nperiod2 &lt;- read_csv('data/DAILYDATA_S24_199312.csv')\nperiod3 &lt;- read_csv('data/DAILYDATA_S24_200312.csv')\nperiod4 &lt;- read_csv('data/DAILYDATA_S24_201312.csv')\nperiod5 &lt;- read_csv('data/DAILYDATA_S24_202312.csv')\n\n\nweather &lt;- rbind(period1,period2,period3,period4,period5)\n\n\nweather &lt;- weather %&gt;%\n  mutate (mean_temp = `Mean Temperature (°C)`) %&gt;%\n  select (Year, Day, mean_temp)\n\nweather$Day &lt;- as.factor(weather$Day)\nweather$Year &lt;- as.factor(weather$Year)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#visualisation",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#visualisation",
+    "title": "Take-home_Exercise 3",
+    "section": "Visualisation",
+    "text": "Visualisation\n\np &lt;- ggplot(weather, \n       aes(Day, \n           Year, \n           fill = mean_temp)) + \ngeom_tile(color = \"white\", \n          size = 0.1) + \ntheme_tufte(base_family = \"Helvetica\") +\nscale_fill_gradient(name = \"Temperature\",\n                    low = \"sky blue\", \n                    high = \"dark blue\") +\nlabs(x = NULL, \n     y = NULL, \n     title = \"Temperature on December in Changi Station\") +\ntheme(plot.title = element_text(hjust = 0.5),\n      legend.title = element_text(size = 8),\n      legend.text = element_text(size = 6))\n\nggplotly(p)\n\n\n\n\n\n\nweather_mean &lt;- weather %&gt;%\n  group_by(Year) %&gt;%\n  mutate(temp = mean(mean_temp)) %&gt;% \n  select (Year, temp) %&gt;%\n  unique()\n\n\np &lt;- ggplot(weather_mean,\n       aes(Year, temp, group = 1)) +\n  geom_line() +\n  theme_minimal()\n\nggplotly(p)\n\n\n\n\n\n\nweather_changes &lt;- weather_mean %&gt;%\n  mutate(type = 1) %&gt;%\n  group_by(type) %&gt;%\n  mutate(change = temp - lag(temp, default = temp[1]))\n\n\nweather_changes %&gt;%\n  ggplot(aes(x = 1, \n             y = change)) +\n  stat_pointinterval() +\n  labs(\n    title = \"Visualising confidence intervals of monthly mean temperature\",\n    subtitle = \"Mean Point + Multiple-interval plot\") +\n  scale_x_continuous(NULL, breaks = NULL) +\n  theme_minimal()"
   }
 ]
