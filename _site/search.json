@@ -830,14 +830,14 @@
     "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html",
     "title": "Take-home_Exercise 3",
     "section": "",
-    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in december 2023, 2013, 2003, 1993, 1983."
+    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in December 2023, 2013, 2003, 1993, 1983."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#overview",
     "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#overview",
     "title": "Take-home_Exercise 3",
     "section": "",
-    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in december 2023, 2013, 2003, 1993, 1983."
+    "text": "In this take home we are going to visualise and analyse mean temperature in Changi station in December 2023, 2013, 2003, 1993, 1983."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#getting-started",
@@ -851,13 +851,20 @@
     "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#data-preparation",
     "title": "Take-home_Exercise 3",
     "section": "Data Preparation",
-    "text": "Data Preparation\n\nperiod1 &lt;- read_csv('data/DAILYDATA_S24_198312.csv')\nperiod2 &lt;- read_csv('data/DAILYDATA_S24_199312.csv')\nperiod3 &lt;- read_csv('data/DAILYDATA_S24_200312.csv')\nperiod4 &lt;- read_csv('data/DAILYDATA_S24_201312.csv')\nperiod5 &lt;- read_csv('data/DAILYDATA_S24_202312.csv')\n\n\nweather &lt;- rbind(period1,period2,period3,period4,period5)\n\n\nweather &lt;- weather %&gt;%\n  mutate (mean_temp = `Mean Temperature (°C)`) %&gt;%\n  select (Year, Day, mean_temp)\n\nweather$Day &lt;- as.factor(weather$Day)\nweather$Year &lt;- as.factor(weather$Year)"
+    "text": "Data Preparation\ncombining all the weather data across the years\n\nperiod1 &lt;- read_csv('data/DAILYDATA_S24_198312.csv')\nperiod2 &lt;- read_csv('data/DAILYDATA_S24_199312.csv')\nperiod3 &lt;- read_csv('data/DAILYDATA_S24_200312.csv')\nperiod4 &lt;- read_csv('data/DAILYDATA_S24_201312.csv')\nperiod5 &lt;- read_csv('data/DAILYDATA_S24_202312.csv')\n\n\nweather &lt;- rbind(period1,period2,period3,period4,period5)\n\nchanging the name of the variable and selecting the important data. furthermore, changing the data type fo day and year as categorical\n\nweather &lt;- weather %&gt;%\n  mutate (mean_temp = `Mean Temperature (°C)`) %&gt;%\n  select (Year, Day, mean_temp)\n\nweather$Day &lt;- as.factor(weather$Day)\nweather$Year &lt;- as.factor(weather$Year)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#visualisation",
     "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#visualisation",
     "title": "Take-home_Exercise 3",
     "section": "Visualisation",
-    "text": "Visualisation\n\np &lt;- ggplot(weather, \n       aes(Day, \n           Year, \n           fill = mean_temp)) + \ngeom_tile(color = \"white\", \n          size = 0.1) + \ntheme_tufte(base_family = \"Helvetica\") +\nscale_fill_gradient(name = \"Temperature\",\n                    low = \"sky blue\", \n                    high = \"dark blue\") +\nlabs(x = NULL, \n     y = NULL, \n     title = \"Temperature on December in Changi Station\") +\ntheme(plot.title = element_text(hjust = 0.5),\n      legend.title = element_text(size = 8),\n      legend.text = element_text(size = 6))\n\nggplotly(p)\n\n\n\n\n\n\nweather_mean &lt;- weather %&gt;%\n  group_by(Year) %&gt;%\n  mutate(temp = mean(mean_temp)) %&gt;% \n  select (Year, temp) %&gt;%\n  unique()\n\n\np &lt;- ggplot(weather_mean,\n       aes(Year, temp, group = 1)) +\n  geom_line() +\n  theme_minimal()\n\nggplotly(p)\n\n\n\n\n\n\nweather_changes &lt;- weather_mean %&gt;%\n  mutate(type = 1) %&gt;%\n  group_by(type) %&gt;%\n  mutate(change = temp - lag(temp, default = temp[1]))\n\n\nweather_changes %&gt;%\n  ggplot(aes(x = 1, \n             y = change)) +\n  stat_pointinterval() +\n  labs(\n    title = \"Visualising confidence intervals of monthly mean temperature\",\n    subtitle = \"Mean Point + Multiple-interval plot\") +\n  scale_x_continuous(NULL, breaks = NULL) +\n  theme_minimal()"
+    "text": "Visualisation\n\nCalendar Heatmap\nplotting the calendar heatmap and including interactivity using ggplotly\n\np &lt;- ggplot(weather, \n       aes(Day, \n           Year, \n           fill = mean_temp)) + \ngeom_tile(color = \"white\", \n          size = 0.1) + \ntheme_tufte(base_family = \"Helvetica\") +\nscale_fill_gradient(name = \"Temperature\",\n                    low = \"sky blue\", \n                    high = \"dark blue\") +\nlabs(x = NULL, \n     y = NULL, \n     title = \"Temperature on December in Changi Station Across Years\") +\ntheme(plot.title = element_text(hjust = 0.5),\n      legend.title = element_text(size = 8),\n      legend.text = element_text(size = 6))\n\nggplotly(p)\n\n\n\n\n\nfrom the graph above we can see that the temperature in 2023 are higher than previous years. there are more darker shades of blue seen on the top part. However, seen from 1993 to 2013 there are not much movement of the temperature in between them. finally, in year 1983 the temperature are significantly lower as almost half of the day in December 1983 are on the lighter side of blue shade.\n\n\nLine Graph: Temperature Movement Every 10 Years\n\nPreparing Data\ncalculating the average temperature of December across years (1983,1993,2003,2013,2023)\n\nweather_mean &lt;- weather %&gt;%\n  group_by(Year) %&gt;%\n  mutate(temp = mean(mean_temp)) %&gt;% \n  select (Year, temp) %&gt;%\n  unique()\n\n\nhead(weather_mean)\n\n# A tibble: 5 × 2\n# Groups:   Year [5]\n  Year   temp\n  &lt;fct&gt; &lt;dbl&gt;\n1 1983   25.4\n2 1993   26.5\n3 2003   26.6\n4 2013   26.5\n5 2023   27.3\n\n\n\n\nVisualising Line Graph\ncreating a line chart to show the increase of average temperature between each year.\n\np &lt;- ggplot(weather_mean,\n       aes(Year, temp, group = 1)) +\n  geom_line() +\n  theme_minimal()\n\nggplotly(p)\n\n\n\n\n\nThis line chart shows similar analysis with the calendar heatmap. The line chart show a moderate increase of temperature in 1993 and 2023. And, temperature between 2013 and 1993 are not fluctuating.\n\n\n\nPoint Interval: Temperature Change per 10 Years\n\nData Preparation\ncalculating the average temperature change every 10 years from 1983 to 2023\n\nweather_changes &lt;- weather_mean %&gt;%\n  mutate(type = 1) %&gt;%\n  group_by(type) %&gt;%\n  mutate(change = temp - lag(temp, default = temp[1]))\n\n\n\nVisualising Point Interval\nplotting the error bar of temperature change every 10 years using confidence level of 0.65 , 0.95, and 0.99\n\nweather_changes %&gt;%\n  ggplot(aes(x = 1, \n             y = change)) +\n  stat_pointinterval(\n    .width = c(0.65,0.95,0.99)\n  ) +\n  labs(\n    title = \"Visualising confidence intervals of monthly mean temperature\",\n    subtitle = \"Mean Point + Multiple-interval plot\") +\n  scale_x_continuous(NULL, breaks = NULL) +\n  scale_y_continuous(breaks = seq(-.2,1.2,.2)) + \n  theme_minimal()\n\n\n\n\n\n\n\n\nthe findings in previous visualisation are also supported by the uncertainy here which tell us temperature fluctuation with different confidence interval:\n\n99% : -0.09 to 1.1\n95% : -0.08 to 1.05\n65% : -0.04 to 0.9"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#conclusion",
+    "href": "Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html#conclusion",
+    "title": "Take-home_Exercise 3",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe claim of temperature increasing by 1.4 to 4.6 degree Celcius cannot be support by our finding where we can 99% confidence that it would only be around -0.1 to 1.1 degree celcius temperate fluctuation. However, our data is using data for every 10 years. A different finding could be found by analysing other dataset or maybe another station/month of the year."
   }
 ]
