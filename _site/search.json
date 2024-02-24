@@ -866,5 +866,26 @@
     "title": "Take-home_Exercise 3",
     "section": "Conclusion",
     "text": "Conclusion\nThe claim of temperature increasing by 1.4 to 4.6 degree Celcius cannot be support by our finding where we can 99% confidence that it would only be around -0.1 to 1.1 degree celcius temperate fluctuation. However, our data is using data for every 10 years. A different finding could be found by analysing other dataset or maybe another station/month of the year."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex6/In-class_Ex6.html",
+    "href": "In-class_Ex/In-class_Ex6/In-class_Ex6.html",
+    "title": "In-Class_Exercise 6: Horizon Plot",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, ggHoriPlot, ggthemes)\n\n\n\n\naverp &lt;- read_csv(\"data/AVERP.csv\") %&gt;%\n  mutate(`Date` = dmy(`Date`))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex6/In-class_Ex6.html#getting-started",
+    "href": "In-class_Ex/In-class_Ex6/In-class_Ex6.html#getting-started",
+    "title": "In-Class_Exercise 6: Horizon Plot",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, ggHoriPlot, ggthemes)\n\n\n\n\naverp &lt;- read_csv(\"data/AVERP.csv\") %&gt;%\n  mutate(`Date` = dmy(`Date`))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex6/In-class_Ex6.html#plotting-horizon-plot",
+    "href": "In-class_Ex/In-class_Ex6/In-class_Ex6.html#plotting-horizon-plot",
+    "title": "In-Class_Exercise 6: Horizon Plot",
+    "section": "Plotting Horizon plot",
+    "text": "Plotting Horizon plot\n\naverp %&gt;% \n  filter(Date &gt;= \"2018-01-01\") %&gt;%\n  ggplot() +\n  geom_horizon(aes(x = Date, y=Values), \n               origin = \"midpoint\", \n               horizonscale = 6)+\n  facet_grid(`Consumer Items`~.) +\n    theme_few() +\n  scale_fill_hcl(palette = 'RdBu') +\n  theme(panel.spacing.y=unit(0, \"lines\"), strip.text.y = element_text(\n    size = 5, angle = 0, hjust = 0),\n    legend.position = 'none',\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size=7),\n    axis.title.y = element_blank(),\n    axis.title.x = element_blank(),\n    axis.ticks.y = element_blank(),\n    panel.border = element_blank()\n    ) +\n    scale_x_date(expand=c(0,0), date_breaks = \"3 month\", date_labels = \"%b%y\") +\n  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')"
   }
 ]
