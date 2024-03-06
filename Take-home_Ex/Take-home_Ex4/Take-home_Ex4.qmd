@@ -1,0 +1,108 @@
+---
+title: "Take-home Exercise 4"
+author: "Michael Berlian"
+date: "6 March 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Playground
+
+```{r}
+pacman::p_load(tidyverse, dfms, fable, tsibble, tsibbledata, zoo, feasts, urca)
+```
+
+```{r}
+data <- read_csv("data/Retail_Sales_Value.csv")
+```
+
+```{r}
+data <- data %>% 
+  mutate(time = my(time)) %>% 
+  mutate(time = yearmonth(time)) %>%
+  as_tsibble()
+  
+```
+
+```{r}
+data %>%
+  model(
+    ets = ETS(box_cox(value, 0.3)),
+    arima = ARIMA(log(value)),
+    snaive = SNAIVE(value)
+  ) %>%
+  forecast(h = "2 years") %>% 
+  autoplot(filter(data, year(time) > 2000), level = NULL)
+```
+
+```{r}
+aus_ret <- aus_retail
+```
+
+```{r}
+nowcasted_aus <- aus_retail %>%
+  filter(
+    State %in% c("New South Wales", "Victoria"),
+    Industry == "Department stores"
+  ) %>% 
+  model(
+    ets = ETS(box_cox(Turnover, 0.3)),
+    arima = ARIMA(log(Turnover)),
+    snaive = SNAIVE(Turnover)
+  ) %>%
+  forecast(h = "2 years") 
+```
+
+## Start Here
+
+```{r}
+pacman::p_load(tidyverse, forecast)
+```
+
+```{r}
+data <- read_csv('data/FDI_Industry.csv')
+```
+
+```{r}
+input_cat <- "Financial & Insurance Services"
+input_h <- 5
+
+data_ts <- data %>%
+  select(input_cat) %>%
+  as.ts()
+```
+
+```{r}
+model <- auto.arima(data_ts)
+forecasted_values <- forecast(model, h = input_h)
+plot(forecasted_values)
+```
+
+```{r}
+forecasted <- as.tibble(forecasted_values$mean) 
+forecasted$year <- seq(max(data$Year)+1, max(data$Year)+input_h,1) 
+forecasted$upper <- as.tibble(forecasted_values$upper)
+forecasted$lower <- as.tibble(forecasted_values$lower)
+
+forecasted <- forecasted %>%
+  mutate(mean = x)
+```
+
+```{r}
+pivoted <- data %>%
+  pivot_longer(!Year, names_to = "Industry", values_to = "Value")
+```
+
+```{r}
+pivoted %>% 
+  filter(Industry != "Total") %>%
+ggplot() +
+  geom_line(aes(x = Year, y = Value, color = Industry)) +
+  geom_line(data = forecasted, aes(x = year, y = mean)) +
+  geom_ribbon(data = forecasted, aes(x = year, ymin = lower$`80%`, ymax = upper$`80%`), linetype=2, alpha=0.2) +
+  geom_ribbon(data = forecasted, aes(x = year, ymin = lower$`95%`, ymax = upper$`95%`), linetype=2, alpha=0.1) 
+```

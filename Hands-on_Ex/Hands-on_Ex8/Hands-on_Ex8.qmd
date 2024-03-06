@@ -127,17 +127,17 @@ GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
                            directed = TRUE)
 ```
 
-### Reviewing the output tidygraph\'s graph object
+### Reviewing the output tidygraph's graph object
 
 ```{r}
 GAStech_graph
 ```
 
-### Reviewing the output tidygraph\'s graph object
+### Reviewing the output tidygraph's graph object
 
 -   The output above reveals that *GAStech_graph* is a tbl_graph object with 54 nodes and 4541 edges.
 
--   The command also prints the first six rows of \"Node Data\" and the first three of \"Edge Data\".
+-   The command also prints the first six rows of "Node Data" and the first three of "Edge Data".
 
 -   It states that the Node Data is **active**. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
 
@@ -153,7 +153,7 @@ GAStech_graph %>%
 
 [**ggraph**](https://ggraph.data-imaginist.com/) is an extension of **ggplot2**, making it easier to carry over basic ggplot skills to the design of network graphs.
 
-As in all network graph, there are three main aspects to a **ggraph**\'s network graph, they are:
+As in all network graph, there are three main aspects to a **ggraph**'s network graph, they are:
 
 -   [nodes](https://cran.r-project.org/web/packages/ggraph/vignettes/Nodes.html),
 
@@ -198,9 +198,9 @@ g + theme_graph(background = 'grey10',
 
 **ggraph** support many layout for standard used, they are: star, circle, nicely (default), dh, gem, graphopt, grid, mds, spahere, randomly, fr, kk, drl and lgl. Figures below and on the right show layouts supported by `ggraph()`.
 
-![](images/Screenshot 2024-03-04 at 17.12.04.png)
+![](images/Screenshot%202024-03-04%20at%2017.12.04.png)
 
-![](images/Screenshot 2024-03-04 at 17.12.17.png)
+![](images/Screenshot%202024-03-04%20at%2017.12.17.png)
 
 ### Fruchterman and Reingold layout
 
@@ -259,7 +259,7 @@ There are three functions in ggraph to implement faceting, they are:
 
 ### working with facet_edges()
 
-In the code chunk below, [*facet_edges()*](https://ggraph.data-imaginist.com/reference/facet_edges.html) is used. Before getting started, it is advisable for you to read it\'s reference guide at least once.
+In the code chunk below, [*facet_edges()*](https://ggraph.data-imaginist.com/reference/facet_edges.html) is used. Before getting started, it is advisable for you to read it's reference guide at least once.
 
 ```{r}
 set_graph_style()
@@ -336,7 +336,7 @@ g + facet_nodes(~Department)+
 
 ### Computing centrality indices
 
-Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. It is beyond the scope of this hands-on exercise to cover the principles and mathematics of these measure here. Students are encouraged to refer to *Chapter 7: Actor Prominence* of **A User\'s Guide to Network Analysis in R** to gain better understanding of theses network measures.
+Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. It is beyond the scope of this hands-on exercise to cover the principles and mathematics of these measure here. Students are encouraged to refer to *Chapter 7: Actor Prominence* of **A User's Guide to Network Analysis in R** to gain better understanding of theses network measures.
 
 ```{r}
 g <- GAStech_graph %>%
@@ -389,9 +389,9 @@ g + theme_graph()
 
 -   *visNetwork()* function uses a nodes list and edges list to create an interactive graph.
 
-    -   The nodes list must include an \"id\" column, and the edge list must have \"from\" and \"to\" columns.
+    -   The nodes list must include an "id" column, and the edge list must have "from" and "to" columns.
 
-    -   The function also plots the labels for the nodes, using the names of the actors from the \"label\" column in the node list.
+    -   The function also plots the labels for the nodes, using the names of the actors from the "label" column in the node list.
 
 -   The resulting graph is fun to play around with.
 
@@ -432,7 +432,7 @@ visNetwork(GAStech_nodes,
 
 ### Working with visual attributes - Nodes
 
-visNetwork() looks for a field called \"group\" in the nodes object and colour the nodes according to the values of the group field.
+visNetwork() looks for a field called "group" in the nodes object and colour the nodes according to the values of the group field.
 
 The code chunk below rename Department field to group.
 
