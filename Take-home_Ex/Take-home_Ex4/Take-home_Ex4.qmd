@@ -10,99 +10,499 @@ execute:
 editor: visual
 ---
 
-## Playground
+## Overview
+
+In this take home exercise we are going to prototype plots that are going to be used for the final project 'outlook of Singapore economic'. Here, we are going to focus on 2 dataset:
+
+-   Foreign Direct Investment: By Industry
+
+-   Foreign Direct Investment: By Region and Country
+
+Furthermore, we are going to separate the plotting into 2 type:
+
+-   Historical
+
+-   Forecast (nowcasting)
+
+## Getting Started
+
+### Importing Packages
 
 ```{r}
-pacman::p_load(tidyverse, dfms, fable, tsibble, tsibbledata, zoo, feasts, urca)
+pacman::p_load(tidyverse, forecast, ggthemes, ggiraph, scales)
+```
+
+### Importing Data
+
+```{r}
+FDI_industry <- read_csv('data/FDI_Industry.csv')
+FDI_region <- read_csv('data/FDI_Region.csv')
+```
+
+### Data Wrangling
+
+Pivoting the table to ease plotting and filtering in the future
+
+```{r}
+FDI_industry <- FDI_industry %>%
+  pivot_longer(!Year, names_to = "Industry", values_to = "Value")
+FDI_region <- FDI_region %>%
+  pivot_longer(!Year, names_to = "Region", values_to = "Value")
+```
+
+## Plot I: Historical Data
+
+### Industry
+
+to mimic our final product we are going to use input variables
+
+```{r}
+avail_cat <- unique(FDI_industry$Industry)
+
+# We can put all unwanted category to input_cat 
+# input_cat <- c("Total","Financial & Insurance Services", "Wholesale & Retail Trade", "Manufacturing","Professional, Administrative & Support Services", "Transport & Storage")
+input_cat <- c()
+
+plot_cat <- avail_cat[!avail_cat %in% input_cat]
 ```
 
 ```{r}
-data <- read_csv("data/Retail_Sales_Value.csv")
+#Filtering the data to only wanted category
+plot_data <- FDI_industry %>%
+  filter(Industry %in% plot_cat)
 ```
 
 ```{r}
-data <- data %>% 
-  mutate(time = my(time)) %>% 
-  mutate(time = yearmonth(time)) %>%
-  as_tsibble()
-  
+#Creating tooltip for hover
+plot_data$tooltip <- c(paste0(
+  "Year = ", plot_data$Year,
+  "\n Value = ", dollar(plot_data$Value),
+  "\n Industry = ", plot_data$Industry 
+))
 ```
 
 ```{r}
-data %>%
-  model(
-    ets = ETS(box_cox(value, 0.3)),
-    arima = ARIMA(log(value)),
-    snaive = SNAIVE(value)
-  ) %>%
-  forecast(h = "2 years") %>% 
-  autoplot(filter(data, year(time) > 2000), level = NULL)
+#choosing y_scale for better view
+if(max(plot_data$Value) > 1000000) {
+  y_scale <- round( (max(plot_data$Value)/10) / 1e5) * 1e5
+} else if (max(plot_data$Value) < 100000) {
+  y_scale <- 10000
+} else {
+  y_scale <- 50000
+}
 ```
 
 ```{r}
-aus_ret <- aus_retail
+#plotting
+p <- ggplot(plot_data) +
+  geom_line(aes(x = Year, 
+                y = Value, 
+                color = Industry)) +
+  geom_point_interactive(aes(x = Year, 
+                             y = Value, 
+                             color = Industry,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  scale_y_continuous("Value (mn $SGD)", breaks = seq(0, max(plot_data$Value),y_scale)) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "grey75"),
+        panel.background = element_rect(fill = "white"),
+        axis.title.y = element_text(size = 8)) +
+  ggtitle("Foreign Direct Investment by Industry") 
+
+#interactivity
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+### Region
+
+to mimic our final product we are going to use input variables
+
+```{r}
+avail_cat <- unique(FDI_region$Region)
+
+# We can put all wanted category to input_cat, note: different from before
+input_cat <- c("Indonesia", "Malaysia", "ASEAN")
+
+# Prevent wrong input
+plot_cat <- avail_cat[avail_cat %in% input_cat]
 ```
 
 ```{r}
-nowcasted_aus <- aus_retail %>%
-  filter(
-    State %in% c("New South Wales", "Victoria"),
-    Industry == "Department stores"
-  ) %>% 
-  model(
-    ets = ETS(box_cox(Turnover, 0.3)),
-    arima = ARIMA(log(Turnover)),
-    snaive = SNAIVE(Turnover)
-  ) %>%
-  forecast(h = "2 years") 
-```
-
-## Start Here
-
-```{r}
-pacman::p_load(tidyverse, forecast)
+#Filtering the data to only wanted category
+plot_data <- FDI_region %>%
+  filter(Region %in% plot_cat)
 ```
 
 ```{r}
-data <- read_csv('data/FDI_Industry.csv')
+#Creating tooltip for hover
+plot_data$tooltip <- c(paste0(
+  "Year = ", plot_data$Year,
+  "\n Value = ", dollar(plot_data$Value),
+  "\n Region = ", plot_data$Region 
+))
 ```
 
 ```{r}
+#choosing y_scale for better view
+if(max(plot_data$Value) > 1000000) {
+  y_scale <- round( (max(plot_data$Value)/10) / 1e5) * 1e5
+} else if (max(plot_data$Value) < 100000) {
+  y_scale <- 10000
+} else {
+  y_scale <- 50000
+}
+```
+
+```{r}
+#plotting
+p <- ggplot(plot_data) +
+  geom_line(aes(x = Year, 
+                y = Value, 
+                color = Region)) +
+  geom_point_interactive(aes(x = Year, 
+                             y = Value, 
+                             color = Region,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  scale_y_continuous("Value (mn $SGD)", breaks = seq(0, max(plot_data$Value),y_scale)) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "grey75"),
+        panel.background = element_rect(fill = "white"),
+        axis.title.y = element_text(size = 8),
+        legend.position = "none") +
+  ggtitle("Foreign Direct Investment by Region") 
+
+#interactivity
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+## Plot II : Forecasting
+
+### Industry
+
+```{r}
+#Input
 input_cat <- "Financial & Insurance Services"
 input_h <- 5
+```
 
-data_ts <- data %>%
-  select(input_cat) %>%
+```{r}
+#preparing data based on input
+plot_data <-FDI_industry %>%
+  filter(Industry == input_cat) 
+
+#changing to time series for arima model
+model_data <- plot_data %>%
+  select(Value) %>%
   as.ts()
 ```
 
 ```{r}
-model <- auto.arima(data_ts)
+#training model and forcasting
+model <- auto.arima(model_data)
 forecasted_values <- forecast(model, h = input_h)
-plot(forecasted_values)
 ```
 
 ```{r}
+#creating data for plotting the forcasted data
 forecasted <- as.tibble(forecasted_values$mean) 
-forecasted$year <- seq(max(data$Year)+1, max(data$Year)+input_h,1) 
-forecasted$upper <- as.tibble(forecasted_values$upper)
-forecasted$lower <- as.tibble(forecasted_values$lower)
+forecasted$Year <- seq(max(plot_data$Year)+1, max(plot_data$Year)+input_h,1) 
+forecasted$Upper <- as.tibble(forecasted_values$upper)
+forecasted$Lower <- as.tibble(forecasted_values$lower)
 
 forecasted <- forecasted %>%
-  mutate(mean = x)
+  mutate(Mean = as.integer(x))
+
+forecasted$Industry <- input_cat
 ```
 
 ```{r}
-pivoted <- data %>%
-  pivot_longer(!Year, names_to = "Industry", values_to = "Value")
+#choosing y scale for better view
+if(max(forecasted$Upper) > 1000000) {
+  y_scale <- round( (max(forecasted$Upper)/10) / 1e5) * 1e5
+} else if (max(forecasted$Upper) < 100000) {
+  y_scale <- 10000
+} else {
+  y_scale <- 50000
+}
+
 ```
 
 ```{r}
-pivoted %>% 
-  filter(Industry != "Total") %>%
-ggplot() +
-  geom_line(aes(x = Year, y = Value, color = Industry)) +
-  geom_line(data = forecasted, aes(x = year, y = mean)) +
-  geom_ribbon(data = forecasted, aes(x = year, ymin = lower$`80%`, ymax = upper$`80%`), linetype=2, alpha=0.2) +
-  geom_ribbon(data = forecasted, aes(x = year, ymin = lower$`95%`, ymax = upper$`95%`), linetype=2, alpha=0.1) 
+#Preparing tooltip for hover view
+plot_data$tooltip <- c(paste0(
+  "Year = ", plot_data$Year,
+  "\n Value = ", dollar(plot_data$Value),
+  "\n Industry = ", plot_data$Industry 
+))
+forecasted$tooltip <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Mean Value = ", dollar(forecasted$Mean),
+  "\n Industry = ", forecasted$Industry 
+))
+forecasted$tooltip_upper_95 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Upper$`95%`),
+  "\n Industry = ", forecasted$Industry 
+))
+forecasted$tooltip_lower_95 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Lower$`95%`),
+  "\n Industry = ", forecasted$Industry 
+))
+forecasted$tooltip_upper_80 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Upper$`80%`),
+  "\n Industry = ", forecasted$Industry 
+))
+forecasted$tooltip_lower_80 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Lower$`80%`),
+  "\n Industry = ", forecasted$Industry 
+))
+```
+
+```{r}
+#plotting
+p <- ggplot() +
+  geom_line(data = plot_data, 
+            aes(x = Year, 
+                y = Value, 
+                color = Industry)) +
+  geom_line(data = forecasted, 
+            aes(x = Year, 
+                y = Mean, 
+                color = Industry)) +
+  geom_ribbon(data = forecasted, 
+              aes(x = Year, 
+                  ymin = Lower$`80%`, 
+                  ymax = Upper$`80%`, 
+                  color = Industry), 
+              linetype=2, 
+              alpha=0.1) +
+  geom_ribbon(data = forecasted, 
+              aes(x = Year, 
+                  ymin = Lower$`95%`, 
+                  ymax = Upper$`95%`, 
+                  color = Industry), 
+              linetype=2, 
+              alpha=0.2) +
+  geom_point_interactive(data = plot_data,
+                         aes(x = Year, 
+                             y = Value, 
+                             color = Industry,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Mean, 
+                             color = Industry,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Upper$`95%`, 
+                             color = Industry,
+                             tooltip = tooltip_upper_95),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Lower$`95%`, 
+                             color = Industry,
+                             tooltip = tooltip_lower_95),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Upper$`80%`, 
+                             color = Industry,
+                             tooltip = tooltip_upper_80),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Lower$`80%`, 
+                             color = Industry,
+                             tooltip = tooltip_lower_80),
+                         size = 0.5) +
+  scale_y_continuous("Value (mn $SGD)", breaks = seq(0, max(forecasted$Upper),y_scale)) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "grey75"),
+        panel.background = element_rect(fill = "white"),
+        axis.title.y = element_text(size = 8)) +
+  ggtitle(paste0("Forecasted Foreign Direct Investment from ", input_cat))
+
+#interactivity
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+```
+
+### Region
+
+```{r}
+#Input
+input_cat <- "Indonesia"
+input_h <- 5
+```
+
+```{r}
+#preparing data based on input
+plot_data <-FDI_region %>%
+  filter(Region == input_cat) 
+
+#changing to time series for arima model
+model_data <- plot_data %>%
+  select(Value) %>%
+  as.ts()
+```
+
+```{r}
+#training model and forcasting
+model <- auto.arima(model_data)
+forecasted_values <- forecast(model, h = input_h)
+```
+
+```{r}
+#creating data for plotting the forcasted data
+forecasted <- as.tibble(forecasted_values$mean) 
+forecasted$Year <- seq(max(plot_data$Year)+1, max(plot_data$Year)+input_h,1) 
+forecasted$Upper <- as.tibble(forecasted_values$upper)
+forecasted$Lower <- as.tibble(forecasted_values$lower)
+
+forecasted <- forecasted %>%
+  mutate(Mean = as.integer(x))
+
+forecasted$Region <- input_cat
+```
+
+```{r}
+#choosing y scale for better view
+if(max(forecasted$Upper) > 1000000) {
+  y_scale <- round( (max(forecasted$Upper)/10) / 1e5) * 1e5
+} else if (max(forecasted$Upper) < 100000) {
+  y_scale <- 10000
+} else {
+  y_scale <- 50000
+}
+
+```
+
+```{r}
+#Preparing tooltip for hover view
+plot_data$tooltip <- c(paste0(
+  "Year = ", plot_data$Year,
+  "\n Value = ", dollar(plot_data$Value),
+  "\n Region = ", plot_data$Region 
+))
+forecasted$tooltip <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Mean Value = ", dollar(forecasted$Mean),
+  "\n Region = ", forecasted$Region 
+))
+forecasted$tooltip_upper_95 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Upper$`95%`),
+  "\n Region = ", forecasted$Region 
+))
+forecasted$tooltip_lower_95 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Lower$`95%`),
+  "\n Region = ", forecasted$Region 
+))
+forecasted$tooltip_upper_80 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Upper$`80%`),
+  "\n Region = ", forecasted$Region 
+))
+forecasted$tooltip_lower_80 <- c(paste0(
+  "Year = ", forecasted$Year,
+  "\n Value = ", dollar(forecasted$Lower$`80%`),
+  "\n Region = ", forecasted$Region 
+))
+```
+
+```{r}
+#plotting
+p <- ggplot() +
+  geom_line(data = plot_data, 
+            aes(x = Year, 
+                y = Value, 
+                color = Region)) +
+  geom_line(data = forecasted, 
+            aes(x = Year, 
+                y = Mean, 
+                color = Region)) +
+  geom_ribbon(data = forecasted, 
+              aes(x = Year, 
+                  ymin = Lower$`80%`, 
+                  ymax = Upper$`80%`, 
+                  color = Region), 
+              linetype=2, 
+              alpha=0.1) +
+  geom_ribbon(data = forecasted, 
+              aes(x = Year, 
+                  ymin = Lower$`95%`, 
+                  ymax = Upper$`95%`, 
+                  color = Region), 
+              linetype=2, 
+              alpha=0.2) +
+  geom_point_interactive(data = plot_data,
+                         aes(x = Year, 
+                             y = Value, 
+                             color = Region,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Mean, 
+                             color = Region,
+                             tooltip = tooltip),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Upper$`95%`, 
+                             color = Region,
+                             tooltip = tooltip_upper_95),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Lower$`95%`, 
+                             color = Region,
+                             tooltip = tooltip_lower_95),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Upper$`80%`, 
+                             color = Region,
+                             tooltip = tooltip_upper_80),
+                         size = 0.5) +
+  geom_point_interactive(data = forecasted,
+                         aes(x = Year, 
+                             y = Lower$`80%`, 
+                             color = Region,
+                             tooltip = tooltip_lower_80),
+                         size = 0.5) +
+  scale_y_continuous("Value (mn $SGD)", breaks = seq(0, max(forecasted$Upper),y_scale)) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "grey75"),
+        panel.background = element_rect(fill = "white"),
+        axis.title.y = element_text(size = 8)) +
+  ggtitle(paste0("Forecasted Foreign Direct Investment from ", input_cat))
+
+#interactivity
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
 ```
