@@ -67,11 +67,15 @@ input_cat <- c()
 plot_cat <- avail_cat[!avail_cat %in% input_cat]
 ```
 
+Filtering the data in to only keep chosen category
+
 ```{r}
 #Filtering the data to only wanted category
 plot_data <- FDI_industry %>%
   filter(Industry %in% plot_cat)
 ```
+
+creating the tool tip for interactive plot
 
 ```{r}
 #Creating tooltip for hover
@@ -81,6 +85,8 @@ plot_data$tooltip <- c(paste0(
   "\n Industry = ", plot_data$Industry 
 ))
 ```
+
+since there are difference max value, its better to scale y axis accordingly to improve readability of the plot.
 
 ```{r}
 #choosing y_scale for better view
@@ -92,6 +98,8 @@ if(max(plot_data$Value) > 1000000) {
   y_scale <- 50000
 }
 ```
+
+plotting the graph of historical value of the FDI for selected industry
 
 ```{r}
 #plotting
@@ -133,11 +141,15 @@ input_cat <- c("Indonesia", "Malaysia", "ASEAN")
 plot_cat <- avail_cat[avail_cat %in% input_cat]
 ```
 
+Filtering the data in to only keep chosen category
+
 ```{r}
 #Filtering the data to only wanted category
 plot_data <- FDI_region %>%
   filter(Region %in% plot_cat)
 ```
+
+creating the tool tip for interactive plot
 
 ```{r}
 #Creating tooltip for hover
@@ -147,6 +159,8 @@ plot_data$tooltip <- c(paste0(
   "\n Region = ", plot_data$Region 
 ))
 ```
+
+since there are difference max value, its better to scale y axis accordingly to improve readability of the plot.
 
 ```{r}
 #choosing y_scale for better view
@@ -158,6 +172,8 @@ if(max(plot_data$Value) > 1000000) {
   y_scale <- 50000
 }
 ```
+
+plotting the graph of historical value of the FDI for selected Country
 
 ```{r}
 #plotting
@@ -190,28 +206,38 @@ girafe(
 
 ### Industry
 
+to mimic our final product we are going to use input variables
+
 ```{r}
 #Input
 input_cat <- "Financial & Insurance Services"
 input_h <- 5
+input_year <- "2000"
 ```
+
+Filtering the data in to only keep chosen industry, and changing the type to time series to be able to be forecasted / nowcasted using ARIMA
 
 ```{r}
 #preparing data based on input
 plot_data <-FDI_industry %>%
-  filter(Industry == input_cat) 
+  filter(Industry == input_cat,
+         Year >= input_year) 
 
 #changing to time series for arima model
 model_data <- plot_data %>%
   select(Value) %>%
-  as.ts()
+  as.ts(star)
 ```
+
+using auto.arima function of forecast package of r to train and get the best model for the forecasting
 
 ```{r}
 #training model and forcasting
 model <- auto.arima(model_data)
 forecasted_values <- forecast(model, h = input_h)
 ```
+
+compiling the data forecasted from the model to be use for plotting
 
 ```{r}
 #creating data for plotting the forcasted data
@@ -226,6 +252,8 @@ forecasted <- forecasted %>%
 forecasted$Industry <- input_cat
 ```
 
+since there are difference max value, its better to scale y axis accordingly to improve readability of the plot.
+
 ```{r}
 #choosing y scale for better view
 if(max(forecasted$Upper) > 1000000) {
@@ -237,6 +265,8 @@ if(max(forecasted$Upper) > 1000000) {
 }
 
 ```
+
+creating the tool tip for interactive plot
 
 ```{r}
 #Preparing tooltip for hover view
@@ -271,6 +301,8 @@ forecasted$tooltip_lower_80 <- c(paste0(
   "\n Industry = ", forecasted$Industry 
 ))
 ```
+
+plotting the forecasted value of the FDI with 80 and 95 per cent confidence level
 
 ```{r}
 #plotting
@@ -350,16 +382,22 @@ girafe(
 
 ### Region
 
+to mimic our final product we are going to use input variables
+
 ```{r}
 #Input
 input_cat <- "Indonesia"
 input_h <- 5
+input_year <- "2000"
 ```
+
+Filtering the data in to only keep chosen industry, and changing the type to time series to be able to be forecasted / nowcasted using ARIMA
 
 ```{r}
 #preparing data based on input
 plot_data <-FDI_region %>%
-  filter(Region == input_cat) 
+  filter(Region == input_cat,
+         Year >= input_year) 
 
 #changing to time series for arima model
 model_data <- plot_data %>%
@@ -367,11 +405,15 @@ model_data <- plot_data %>%
   as.ts()
 ```
 
+using auto.arima function of forecast package of r to train and get the best model for the forecasting
+
 ```{r}
 #training model and forcasting
 model <- auto.arima(model_data)
 forecasted_values <- forecast(model, h = input_h)
 ```
+
+compiling the data forecasted from the model to be use for plotting
 
 ```{r}
 #creating data for plotting the forcasted data
@@ -386,6 +428,8 @@ forecasted <- forecasted %>%
 forecasted$Region <- input_cat
 ```
 
+since there are difference max value, its better to scale y axis accordingly to improve readability of the plot.
+
 ```{r}
 #choosing y scale for better view
 if(max(forecasted$Upper) > 1000000) {
@@ -397,6 +441,8 @@ if(max(forecasted$Upper) > 1000000) {
 }
 
 ```
+
+creating the tool tip for interactive plot
 
 ```{r}
 #Preparing tooltip for hover view
@@ -431,6 +477,8 @@ forecasted$tooltip_lower_80 <- c(paste0(
   "\n Region = ", forecasted$Region 
 ))
 ```
+
+plotting the forecasted value of the FDI with 80 and 95 per cent confidence levels
 
 ```{r}
 #plotting
@@ -507,3 +555,9 @@ girafe(
   height_svg = 6*0.618
 )
 ```
+
+## User Interface
+
+![](images/Screenshot 2024-03-09 at 17.53.29.png)
+
+![](images/Screenshot 2024-03-09 at 17.53.46.png)

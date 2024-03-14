@@ -1,0 +1,12 @@
+---
+title: "Hands-on Exercise 9: Information Dashboard Design"
+author: "Michael Berlian"
+date: "29 February 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+editor: visual
+---

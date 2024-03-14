@@ -43,6 +43,8 @@ website:
         href: Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7c.html
       - text: Hands-on Exercise 8
         href: Hands-on_Ex/Hands-on_Ex8/Hands-on_Ex8.html
+      - text: Hands-on Exercise 9
+        href: Hands-on_Ex/Hands-on_Ex9/Hands-on_Ex9.html
     - text: In-class Exercises
       menu:
       - text: In-class Exercise 1
