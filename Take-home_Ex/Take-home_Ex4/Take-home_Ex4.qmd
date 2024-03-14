@@ -558,6 +558,6 @@ girafe(
 
 ## User Interface
 
-![](images/Screenshot 2024-03-09 at 17.53.29.png)
+![](images/Screenshot%202024-03-09%20at%2017.53.29.png)
 
-![](images/Screenshot 2024-03-09 at 17.53.46.png)
+![](images/Screenshot%202024-03-09%20at%2017.53.46.png)
