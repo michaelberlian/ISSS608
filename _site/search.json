@@ -1138,7 +1138,7 @@
     "href": "Take-home_Ex/Take-home_Ex4/Take-home_Ex4.html#user-interface",
     "title": "Take-home Exercise 4",
     "section": "User Interface",
-    "text": "User Interface"
+    "text": "User Interface\n\n\nUI Components:\n\nTitle and Tabs: utilising navbarPage to create both tab of historical and nowcast view, and titlepanel to create the main title\nsidebar for input selections: selection of dataset, method, years, and forecast duration using sidebarPanel\nmain panel for plot output (plotOutput) and text output (verbatimTextOutput)\n\nserver design:\n\nDataset: using the dataset based on the inputs on the drop down\nsubset data: using reactive drop down based one then dataset selected\nforecasting using the method chosen\nplotting the historical/nowcasted graph\noutput display for the plot\n\nfor the inputs:\n\nselectInput() for dropdown\nnumericInput()\nactionButton() for the trigger\nplotOutput() place holder of the plot"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex7/data/geospatial/MPSZ-2019.html",

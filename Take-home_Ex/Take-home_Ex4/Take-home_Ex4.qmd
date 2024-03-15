@@ -561,3 +561,24 @@ girafe(
 ![](images/Screenshot%202024-03-09%20at%2017.53.29.png)
 
 ![](images/Screenshot%202024-03-09%20at%2017.53.46.png)
+
+UI Components:
+
+1.  Title and Tabs: utilising navbarPage to create both tab of historical and nowcast view, and titlepanel to create the main title
+2.  sidebar for input selections: selection of dataset, method, years, and forecast duration using sidebarPanel
+3.  main panel for plot output (plotOutput) and text output (verbatimTextOutput)
+
+server design:
+
+1.  Dataset: using the dataset based on the inputs on the drop down
+2.  subset data: using reactive drop down based one then dataset selected
+3.  forecasting using the method chosen
+4.  plotting the historical/nowcasted graph
+5.  output display for the plot
+
+for the inputs:
+
+1.  selectInput() for dropdown
+2.  numericInput()
+3.  actionButton() for the trigger
+4.  plotOutput() place holder of the plot
