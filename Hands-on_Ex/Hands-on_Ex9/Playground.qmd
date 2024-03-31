@@ -1,0 +1,442 @@
+---
+title: "Playground"
+---
+
+```{r}
+pacman::p_load(tidyverse, timetk, modeltime, tidymodels, plotly, forecast)
+```
+
+```{r}
+coffeechain <- read_rds("data/rds/CoffeeChain.rds")
+```
+
+```{r}
+write_csv(coffeechain, 'data/coffee.csv')
+```
+
+```{r}
+data <- read_csv('data/Retail Sales Value 2017101.csv')
+
+start_date <- as.Date('2000-01-01')
+data$DATE <- as.Date(paste0('01/',data$DATE), format = '%d/%m/%Y')
+
+data <- data[data$DATE >= start_date, ]
+
+data <- data[order(data$DATE),]
+
+data_tibble <- as_tibble(data)
+```
+
+```{r}
+data <- read_csv('data/Retail.csv')
+```
+
+```{r}
+data <- read_csv('data/Retail.csv')
+data$DATE <- as.Date(paste0('01/',data$DATE), format = '%d/%m/%Y')
+data_tibble <- as_tibble(data)
+```
+
+```{r}
+data_tibble %>%
+      plot_time_series(
+        DATE, VALUE,
+        .interactive = TRUE,
+        .plotly_slider = TRUE
+      )
+```
+
+```{r}
+
+import <- read_csv('data/import.csv')
+export <- read_csv('data/export.csv')
+fnb <- read_csv('data/FnB.csv')
+retail <- read_csv('data/Retail.csv')
+```
+
+```{r}
+country_list <- colnames(import)[-1]
+
+```
+
+```{r}
+output_import <- import
+output_import$DATE <- as.Date(paste0('01/',output_import$DATE), format = '%d/%m/%Y')
+output_import <- as_tibble(output_import)
+```
+
+```{r}
+output_import %>%
+  select(DATE, 'America')%>%
+  rename(VALUE = 'America')%>%
+      plot_time_series(
+        DATE, VALUE,
+        .interactive = TRUE,
+        .plotly_slider = TRUE
+      )
+```
+
+```{r}
+
+fnb <- read_csv('data/FnB.csv')
+retail <- read_csv('data/Retail.csv')
+fnb$DATE <- as.Date(paste0('01/',fnb$DATE), format = '%d/%m/%Y')
+retail$DATE <- as.Date(paste0('01/',retail$DATE), format = '%d/%m/%Y')
+```
+
+```{r}
+fnb %>%
+          plot_time_series(
+            DATE, VALUE,
+            .interactive = TRUE,
+            .plotly_slider = TRUE
+          )
+```
+
+```{r}
+fnb %>%
+            plot_time_series(
+              DATE, VALUE,
+              .interactive = FALSE)
+```
+
+```{r}
+fnb %>%
+    plot_stl_diagnostics(
+        DATE, VALUE,
+        .frequency = "auto", .trend = "auto",
+        .feature_set = c("observed", "season", "trend", "remainder"),
+        .interactive = TRUE)
+```
+
+```{r}
+fnb %>%
+    plot_acf_diagnostics(
+        DATE, VALUE,               # ACF & PAC,          # 7-Days of hourly lags
+        .interactive = TRUE,
+        .plotly_slider = TRUE
+    )
+```
+
+```{r}
+fnb %>%
+      plot_seasonal_diagnostics(DATE, VALUE, .interactive = TRUE)
+```
+
+```{r}
+fnb <- read_csv('data/FnB.csv')
+retail <- read_csv('data/Retail.csv')
+fnb$DATE <- as.Date(paste0('01/',fnb$DATE), format = '%d/%m/%Y')
+retail$DATE <- as.Date(paste0('01/',retail$DATE), format = '%d/%m/%Y')
+```
+
+```{r}
+# Split Data 80/20
+splits <- initial_time_split(fnb, prop = 0.9)
+```
+
+```{r}
+# Model 1: auto_arima ----
+model_fit_arima_no_boost <- arima_reg() %>%
+    set_engine(engine = "auto_arima") %>%
+    fit(VALUE ~ DATE, data = training(splits))
+```
+
+```{r}
+# Model 2: arima_boost ----
+model_fit_arima_boosted <- arima_boost(
+    min_n = 2,
+    learn_rate = 0.015
+) %>%
+    set_engine(engine = "auto_arima_xgboost") %>%
+    fit(VALUE ~ DATE + as.numeric(DATE) + factor(month(DATE, label = TRUE), ordered = F),
+        data = training(splits))
+```
+
+```{r}
+models_tbl <- modeltime_table(
+    model_fit_arima_no_boost
+    # model_fit_arima_boosted
+)
+
+models_tbl
+```
+
+```{r}
+calibration_tbl <- models_tbl %>%
+    modeltime_calibrate(new_data = testing(splits))
+
+calibration_tbl
+```
+
+```{r}
+calibration_tbl %>%
+    modeltime_forecast(
+        new_data    = testing(splits),
+        actual_data = fnb
+    ) %>%
+    plot_modeltime_forecast(
+      .interactive = FALSE
+    ) 
+```
+
+```{r}
+calibration_tbl %>%
+    modeltime_accuracy() %>%
+    table_modeltime_accuracy(
+        .interactive = FALSE
+    )
+```
+
+```{r}
+refit_tbl <- calibration_tbl %>%
+    modeltime_refit(data = fnb)
+
+refit_tbl %>%
+    modeltime_forecast(h = "3 months", actual_data = fnb) %>%
+    plot_modeltime_forecast(
+      .interactive      = FALSE
+    )
+```
+
+```{r}
+#| eval: false
+refit_tbl %>%
+  plot_modeltime_forecast()
+```
+
+```{r}
+p <- WWWusage %>%
+  auto.arima() %>%
+  forecast(h=20) %>%
+  autoplot()
+p
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(timetk)
+library(parsnip)
+library(rsample)
+library(modeltime)
+
+# Data
+m750 <- m4_monthly %>% filter(id == "M750")
+
+# Split Data 80/20
+splits <- initial_time_split(m750, prop = 0.9)
+
+# --- MODELS ---
+
+# Model 1: prophet ----
+model_fit_prophet <- prophet_reg() %>%
+    set_engine(engine = "prophet") %>%
+    fit(value ~ date, data = training(splits))
+
+
+# ---- MODELTIME TABLE ----
+
+models_tbl <- modeltime_table(
+    model_fit_prophet
+)
+
+# ---- FORECAST ----
+
+models_tbl %>%
+    modeltime_calibrate(new_data = testing(splits)) %>%
+    modeltime_forecast(
+        new_data    = testing(splits),
+        actual_data = m750
+    ) %>%
+    plot_modeltime_forecast(.interactive = FALSE)
+```
+
+```{r}
+#| eval: false
+x <- forecast.ets(fnb, h = 2)
+```
+
+```{r}
+model <- ets (fnb$VALUE)
+```
+
+```{r}
+forecast_test <- forecast.ets(model, h=2)
+```
+
+```{r}
+autoplot(model)
+```
+
+## starts here
+
+```{r}
+data <- bike_sharing_daily %>%
+  select (dteday, cnt)
+
+data %>% plot_time_series(dteday, cnt)
+
+fnb <- read_csv('data/FnB.csv')
+retail <- read_csv('data/Retail.csv')
+fnb$DATE <- as.Date(paste0('01/',fnb$DATE), format = '%d/%m/%Y')
+retail$DATE <- as.Date(paste0('01/',retail$DATE), format = '%d/%m/%Y')
+
+data <- fnb %>%
+  rename (dteday = DATE,
+          cnt = VALUE)
+```
+
+```{r}
+splits <- time_series_split(
+  data,
+  assess = "3 months",
+  cumulative = TRUE
+)
+```
+
+```{r}
+splits %>% 
+  tk_time_series_cv_plan() %>% 
+  plot_time_series_cv_plan(dteday, cnt, .interactive = FALSE)
+```
+
+```{r}
+model_arima <- arima_reg()%>%
+  set_engine("auto_arima") %>% 
+  fit(cnt ~ dteday, training(splits))
+model_ets <- exp_smoothing()%>%
+  set_engine("ets") %>% 
+  fit(cnt ~ dteday, training(splits))
+model_prophet <- prophet_reg()%>%
+  set_engine("prophet") %>% 
+  fit(cnt ~ dteday, training(splits))
+```
+
+```{r}
+models_tbl <- modeltime_table(
+    model_arima,
+    model_ets,
+    model_prophet
+)
+
+models_tbl
+```
+
+```{r}
+calibration_tbl <- models_tbl %>%
+    modeltime_calibrate(new_data = testing(splits))
+
+calibration_tbl
+```
+
+```{r}
+calibration_tbl %>%
+    modeltime_forecast(
+        new_data    = testing(splits),
+        actual_data = data
+    ) %>%
+    plot_modeltime_forecast(
+      .interactive = FALSE
+    ) 
+```
+
+```{r}
+calibration_tbl %>%
+    modeltime_accuracy() %>%
+    table_modeltime_accuracy(
+        .interactive = FALSE
+    )
+```
+
+```{r}
+refit_tbl <- calibration_tbl %>%
+    modeltime_refit(data = data)
+
+plot_data <- data %>% 
+  filter(
+    dteday > '2020-01-01'
+  )
+
+p <- refit_tbl %>%
+    modeltime_forecast(h = "3 months", actual_data = plot_data) %>%
+    plot_modeltime_forecast(
+      .interactive      = FALSE
+    )
+p
+```
+
+```{r}
+arima_reg()
+```
+
+## quarter
+
+```{r}
+
+data <- read_csv('data/GDPgrowth.csv')
+data$year = substring(data$DATE,1,4)
+data$quarter = substring(data$DATE,6,7)
+data <- data %>%
+  mutate(
+    quarter = case_when(
+      quarter == '1Q' ~ '31/03/',
+      quarter == '2Q' ~ '30/06/',
+      quarter == '3Q' ~ '30/09/',
+      quarter == '4Q' ~ '31/12/'
+    )
+  ) 
+data$DATE = as.Date(paste0(data$quarter,data$year), format = '%d/%m/%Y')
+data <- data %>%
+  arrange(DATE)
+data_tibble <- data %>%
+  rename (
+    VALUE = `GDP At Current Market Prices`
+  ) %>%
+  select (DATE, VALUE)
+```
+
+```{r}
+data <- read_csv('data/GDPgrowth.csv')
+data <- data %>%
+  mutate(
+    year = strsplit(DATE,' ')[[1]][1],
+    quarter = strsplit(DATE,' ')[[1]][2]
+  ) %>%
+  mutate(
+    quarter = case_when(
+      quarter == '1Q' ~ '31/03/',
+      quarter == '2Q' ~ '30/06/',
+      quarter == '3Q' ~ '30/09/',
+      quarter == '4Q' ~ '31/12/',
+    )
+  ) %>%
+  mutate(
+    DATE = as.Date(paste0(quarter,year), format = '%d/%m/%Y')
+  )
+data_tibble <- as_tibble(data)
+data_tibble <- data %>%
+  rename (
+    VALUE = `GDP At Current Market Prices`
+  ) %>%
+  select (DATE, VALUE)
+```
+
+```{r}
+data <- read_csv('data/FnB.csv')
+data$DATE <- as.Date(paste0('01/',data$DATE), format = '%d/%m/%Y')
+data_tibble <- as_tibble(data)
+```
+
+```{r}
+colnames(data)[-1]
+```
+
+```{r}
+data_tibble %>%
+      plot_time_series(
+        DATE, VALUE,
+        .interactive = TRUE,
+        .plotly_slider = TRUE
+      )
+```

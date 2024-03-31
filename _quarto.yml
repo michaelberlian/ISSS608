@@ -65,7 +65,14 @@ website:
         href: Take-home_Ex/Take-home_Ex4/Take-home_Ex4.html
     - text: Group Project
       menu:
-      - text: nothing here yet
+      - text: Project Website
+        href: https://nowcasting-economic-sg.netlify.app
+      - text: Project Website GitHub
+        href: https://github.com/AlexeiJason/ISSS608-Project
+      - text: Shiny Application
+        href: https://michael-berlian.shinyapps.io/Project/
+      - text: Shiny Application GitHub & User Guide
+        href: https://github.com/michaelberlian/ISSS608-Shiny
     right:
       - href: index.qmd
         text: Home
